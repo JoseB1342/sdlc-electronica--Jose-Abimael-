@@ -6,6 +6,9 @@ from semana1.solid_srp_ocp_lsp import (
     TemperatureSensorMal, HumiditySensorMal, 
     TemperatureSensor, HumiditySensor, process_sensor
 )
+from semana1.solid_isp_dip import SensorBasicoTemperaturaMal, SensorBasicoTemperatura, SensorInteligenteIndustrial
+from semana1.solid_isp_dip import DataProcessMal, DataProcessor, InMemoryRepository
+
 
 def test_initial_state():
     fsm = TrafficLightFSM()
@@ -66,3 +69,38 @@ def test_lsp_correct():
     h_sensor = HumiditySensor()
     assert t_sensor.get_reading() == 25.0
     assert h_sensor.get_reading() == 60.0
+
+"""////////////////////////////////// I de SOLID/////////////////////////////////"""
+def test_isp_violation():
+    sensor_mal = SensorBasicoTemperaturaMal()
+    assert sensor_mal.read() == 23.4
+    with pytest.raises(NotImplementedError):
+        sensor_mal.write(10.0)
+
+def test_isp_correcto():
+    sensor_ok = SensorBasicoTemperatura()
+    assert sensor_ok.read() == 23.4
+
+    assert not hasattr(sensor_ok, 'Write')
+
+    smart_sensor = SensorInteligenteIndustrial()
+    smart_sensor.write(45.2)
+    assert smart_sensor.read() == 45.2
+    assert smart_sensor.calibrate() == "Calibracion exitosa"
+
+    """///////////////////////////////////////////////////7"""
+    def  test_dip_violacion():
+        processor_mal = DataProcessMal()
+        assert hasattr(processor_mal, "_repo")
+
+        assert processor_mal._repo.__class__name__ == "SQLServerRepository"
+
+    def test_dip_correcto():
+        repo_falso = InMemoryRepository()
+        processor = DataProcessor(repo_falso)
+        lectura  = SensorReading("PRES_01",101.3,"2026-07-16 12:00")
+        processor.procesar(lectura)
+        ultimo = processor.obtener_ultimo("PRES_01")
+        assert ultimo is not None
+        assert ultimo.value == 101.3
+        
