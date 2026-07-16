@@ -31,7 +31,7 @@ class DataLogger:
         lectura = SensorReading(sensor_id, value, timestamp)
         self.hitorial_guardado.append(lectura)
 
-"""///////////////////////////////////////////////////////////////////////////////////////////////////"""
+"""Principio 2 Open/Closed Principle (OCP)"""
 class ViolationOCP:
     def __init__(self, tipo_alerta: str) -> None:
         self.tipo_alerta = tipo_alerta
@@ -50,7 +50,7 @@ class AlertSender(ABC):
     @abstractmethod
     def send_alert(self, reading: SensorReading, threshold: float) -> None:
         pass
-
+# Los Senders son mis mensajes que se esctrucuran de mandera unica para que no choque el uno con el otro, y asi cumplir con el principio de abierto/cerrado, ya que si quiero agregar un nuevo tipo de alerta, solo tengo que crear una nueva clase que herede de AlertSender y no modificar las clases existentes.
 class ConsoleAlertSender(AlertSender):
     def send_alert(self, reading: SensorReading, threshold: float) -> None:
         if reading.value > threshold:
@@ -68,7 +68,7 @@ class EmailAlertSender(AlertSender):
             # Lógica para enviar un correo electrónico
             return(f"[email] Alerta: El valor del sensor {reading.sensor_id} excede el umbral de {threshold}. Valor actual: {reading.value}")
 
-class AnomalyDetector:
+class AnomalyDetector: #Este es el cebro de la clase, este puede resivir cualquier tipo de alerta y enviar la alerta correspondiente, siempre que tenga un alertsender.
     def __init__(self, alert_sender: AlertSender) -> None:
         self.alert_sender = alert_sender
 
@@ -93,7 +93,7 @@ class TemperatureSensorMal(BaseSensorMal):
     def get_reading(self) ->float:
         return 25.0
     
-class HumiditySensorMal(BaseSensorMal):
+class HumiditySensorMal(BaseSensorMal): #esta parte es la mal ya que la clase HumiditySensorMal hereda de BaseSensorMal, pero no cumple con el contrato de la clase base, ya que lanza una excepción en lugar de devolver un valor válido. Esto viola el principio de sustitución de Liskov.
     def get_reading(self) ->float:
         raise ValueError("No se puede obtener la lectura de humedad de un sensor de temperatura")
     
@@ -106,7 +106,7 @@ class TemperatureSensor(BaseSensor):
     def get_reading(self) -> float:
         return 25.0
     
-class HumiditySensor(BaseSensor):
+class HumiditySensor(BaseSensor): #Este es el bueno por que cumplen con lo que se espera de la clase base, ya que devuelve un valor válido de humedad que son los get_reading.
     def get_reading(self) -> float:
         return 60.0
     
