@@ -1,6 +1,5 @@
 import pytest
 import json
-import os
 from semana1.uart_driver.recorder import DataRecorder
 
 def test_recorder_escritura_json_lines(tmp_path):

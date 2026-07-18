@@ -1,10 +1,10 @@
 import pytest
 # Aquí le decimos a Python que vaya a tu archivo fsm_demo y traiga el semáforo
 from semana1.fsm_demo import TrafficLightFSM, TrafficLightState
-from semana1.solid_srp_ocp_lsp import AnomalyDetector, SensorReader, DataLogger, ConsoleAlertSender, FileAlertSender, EmailAlertSender, SensorReading, ViolationOCP
+from semana1.solid_srp_ocp_lsp import AnomalyDetector, ConsoleAlertSender, EmailAlertSender, SensorReading, ViolationOCP
 from semana1.solid_srp_ocp_lsp import (
     TemperatureSensorMal, HumiditySensorMal, 
-    TemperatureSensor, HumiditySensor, process_sensor
+    TemperatureSensor, HumiditySensor
 )
 from semana1.solid_isp_dip import SensorBasicoTemperaturaMal, SensorBasicoTemperatura, SensorInteligenteIndustrial
 from semana1.solid_isp_dip import DataProcessMal, DataProcessor, InMemoryRepository
@@ -89,13 +89,13 @@ def test_isp_correcto():
     assert smart_sensor.calibrate() == "Calibracion exitosa"
 
     """///////////////////////////////////////////////////7"""
-    def  test_dip_violacion():
+def test_dip_violacion():
         processor_mal = DataProcessMal()
         assert hasattr(processor_mal, "_repo")
-
-        assert processor_mal._repo.__class__name__ == "SQLServerRepository"
-
-    def test_dip_correcto():
+        # Corrección aquí: añade el punto antes de __name__
+        assert processor_mal._repo.__class__.__name__ == "SQLServerRepository"
+        
+def test_dip_correcto():
         repo_falso = InMemoryRepository()
         processor = DataProcessor(repo_falso)
         lectura  = SensorReading("PRES_01",101.3,"2026-07-16 12:00")

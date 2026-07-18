@@ -79,7 +79,7 @@ class DataRepository(Protocol):
     def get_latest(self,sensor_id: str) -> Optional[SensorRecording]:...
 
 class DataProcessor:
-    def __init__(self, repository: SensorRecording) -> None:
+    def __init__(self, repository: DataRepository) -> None: 
         self._repo = repository
     
     def procesar(self, reading: SensorRecording) ->None:
@@ -99,4 +99,4 @@ class InMemoryRepository(DataRepository):
         for r in reversed(self.storage):
             if  r.sensor_id == sensor_id:
                 return r 
-            return None
+        return None
