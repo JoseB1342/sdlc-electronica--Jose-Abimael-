@@ -149,3 +149,9 @@
     - Se corrigió un problema de indentación que anidaba las funciones de prueba de `pytest` dentro de la clase `TrafficLightFSM`, lo cual generaba conflictos con el argumento `self`. Los tests se extrajeron al nivel raíz del módulo.
     - Refactorización de las firmas de métodos en `AlertSender` y clases derivadas (`ConsoleAlertSender`, `EmailAlertSender`, `AnomalyDetector`) para coordinar el retorno de datos (`-> Optional[str]` / `-> str`) y el tipo de los parámetros (`threshold: float`), evitando comportamientos indeterminados y salidas `None` no declaradas.
     - Corrección de variables locales mal declaradas en el constructor de `ViolacionSRP`, transformándolas en atributos de instancia reales mediante `self.historial_guardado` para asegurar su persistencia en RAM.
+    ------------------------------
+    ### 🕵️‍♂️ Auditoría de IA al Backlog (Gherkin)
+    Le pedí a la IA que auditara la US-01 (FSM Patrón State) buscando ambigüedades y casos borde:
+ * **¿Es verificable?** Sí. En `pytest` se puede instanciar la clase y hacer un assert evaluando el tipo de objeto interno (ej. `assert isinstance(fsm.state, GreenState)`).
+ * **¿Es ambiguo?** La frase "interrupción de Emergencia" es ambigua a nivel código. Falta definir si será un método nuevo `fsm.trigger_emergency()` o si se enviará un parámetro especial en `fsm.transition()`.
+ * **¿Qué caso borde falta?** ¿Qué sucede si el semáforo *ya está* en estado de Emergencia y recibe otra señal regular de transición? El Gherkin no define si la FSM debe ignorar la transición regular, lanzar un error, o salir de la emergencia. Es un caso ciego que podría causar un bug.
