@@ -150,8 +150,28 @@
     - Refactorización de las firmas de métodos en `AlertSender` y clases derivadas (`ConsoleAlertSender`, `EmailAlertSender`, `AnomalyDetector`) para coordinar el retorno de datos (`-> Optional[str]` / `-> str`) y el tipo de los parámetros (`threshold: float`), evitando comportamientos indeterminados y salidas `None` no declaradas.
     - Corrección de variables locales mal declaradas en el constructor de `ViolacionSRP`, transformándolas en atributos de instancia reales mediante `self.historial_guardado` para asegurar su persistencia en RAM.
     ------------------------------
-    ### 🕵️‍♂️ Auditoría de IA al Backlog (Gherkin)
+    ###  Auditoría de IA al Backlog (Gherkin)
     Le pedí a la IA que auditara la US-01 (FSM Patrón State) buscando ambigüedades y casos borde:
  * **¿Es verificable?** Sí. En `pytest` se puede instanciar la clase y hacer un assert evaluando el tipo de objeto interno (ej. `assert isinstance(fsm.state, GreenState)`).
  * **¿Es ambiguo?** La frase "interrupción de Emergencia" es ambigua a nivel código. Falta definir si será un método nuevo `fsm.trigger_emergency()` o si se enviará un parámetro especial en `fsm.transition()`.
  * **¿Qué caso borde falta?** ¿Qué sucede si el semáforo *ya está* en estado de Emergencia y recibe otra señal regular de transición? El Gherkin no define si la FSM debe ignorar la transición regular, lanzar un error, o salir de la emergencia. Es un caso ciego que podría causar un bug.
+ ---------------------------------------
+ ## [23-07-2026] - Definition of Done y Calidad Automatizada (Semana 2)
+
+**Objetivos Cumplidos**
+  - Creación de la `Definition of Done` (DoD) estableciendo criterios estrictos de entrega: cobertura ≥ 80%, linters limpios, tipado estricto y revisión de PR.
+  - Configuración centralizada de herramientas de calidad en `pyproject.toml` para automatizar la aplicación de la DoD.
+  - Ejecución de auto-revisión de código en GitHub mediante la lectura del diff línea por línea antes de realizar el merge.
+
+**Comandos Ejecutados y Resultados**
+  1. Pytest (Cobertura estricta): Configurado con `--cov-fail-under=80`. El pipeline ahora rechaza automáticamente código que baje el umbral de pruebas.
+  2. Ruff (Linter): Activación de reglas `select = ["E", "F", "I", "UP", "B"]`.
+  3. Mypy (Tipado estricto): Activación de `disallow_untyped_defs = true`. Resultando en un código 100% tipado (`Success: no issues found`).
+
+**Lecciones Aprendidas & Refactorización**
+  - Resolución de conflictos de Mypy: Se resolvió el error de módulos duplicados (`Source file found twice...`) mediante la creación del archivo `__init__.py` en el directorio `semana2/`, formalizándolo como un paquete de Python.
+  - Tipado en Pruebas y Clases: El modo estricto de `mypy` requirió especificar `-> None` en las funciones de `pytest` (ya que no retornan valores) y `-> str` en el método `get` del `SensorRegistry`.
+  - Sintaxis en pyproject.toml: Se corrigió un error tipográfico en la configuración (`ignore_missing_imports = true`), recordando que TOML es sensible a mayúsculas y escritura exacta.
+
+**Estatus del Proyecto**
+  - Estado: Entorno CI/CD local configurado. Pull Request (`feat/tdd-sensor-registry`) revisado línea por línea y fusionado a `main` con éxito.
