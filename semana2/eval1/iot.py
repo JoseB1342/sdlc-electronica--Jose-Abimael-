@@ -1,3 +1,4 @@
+import random
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Protocol
@@ -52,3 +53,15 @@ class AlertManager:
     def dispatch(self, sensor_id: str, message: str) -> None:
         for strategy in self.strategies:
             strategy.send(sensor_id, message)
+
+#-------------------------------------
+class SensorSimulator:
+    def __init__(self, sensor_id: str, base_temp: float, base_hum: float) -> None:
+        self.sensor_id = sensor_id
+        self.base_temp = base_temp
+        self.base_hum = base_hum
+
+    def read(self) -> SensorReading:
+        temp = random.gauss(self.base_temp, 2.0)
+        hum = random.gauss(self.base_hum, 5.0)
+        return SensorReading(self.sensor_id, round(temp, 2), round(hum, 2))
