@@ -1,3 +1,4 @@
+import pytest
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -8,9 +9,8 @@ from semana2.eval1.iot import (
     ConsoleAlertStrategy,
     FileAlertStrategy,
     SensorReading,
+    SensorSimulator
 )
-
-
 def test_sensor_reading_creation() -> None:
     reading = SensorReading(sensor_id="SENS-01", temperature=25.0, humidity=50.0)
     
@@ -49,6 +49,31 @@ def test_alert_manager_file(tmp_path: Path) -> None:
     
     manager.dispatch("SENS-88", "Humedad Crítica")
     
-    content = log_file.read_text()
+    content = log_file.read_text(encoding="utf-8")
     assert "SENS-88" in content
     assert "Humedad Crítica" in content
+
+#--------------------------------
+
+def test_integration_10_sensors_60_cycles(capsys: Any) -> None:
+    detector = AnomalyDetector(max_temp=35.0, max_hum=80.0)
+    manager = AlertManager(strategies=[ConsoleAlertStrategy()])
+    
+    sensors = [SensorSimulator(f"S-{i}", base_temp=25.0, base_hum=50.0) for i in range(9)]
+    sensors.append(SensorSimulator("S-DEFECT", base_temp=38.0, base_hum=50.0))
+    
+    alerts_triggered = 0
+
+    for _ in range(60):
+        for sensor in sensors:
+            reading = sensor.read()
+            is_anomaly, message = detector.check(reading)
+            
+            if is_anomaly and message:
+                manager.dispatch(reading.sensor_id, message)
+                alerts_triggered += 1
+
+    captured = capsys.readouterr()
+    
+    assert alerts_triggered > 50 
+    assert "S-DEFECT" in captured.out
