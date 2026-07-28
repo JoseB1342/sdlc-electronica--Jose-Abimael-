@@ -5,3 +5,7 @@
 ## [27-07-2026] - Día 1: Pruebas con Swagger UI y Control de Versiones
 - **Prompt/Interacción:** "Asistencia para levantar el servidor Uvicorn y probar los endpoints (GET /health y POST /readings)."
 - **Resultado:** Ejecución exitosa del servidor con recarga automática (`--reload`). Se verificó la respuesta 201 y la inyección automática del ID a través de la interfaz de documentación interactiva Swagger UI, finalizando con el respaldo en GitHub.
+-------------------------------------
+## [28-07-2026] - Día 2: Persistencia con SQLAlchemy 2.x
+- **Prompt/Interacción:** "Ayuda para conectar SQLite a la arquitectura de SensorHub e implementar modelos de persistencia."
+- **Resultado:** Se configuró el motor y sesión de SQLAlchemy usando la sintaxis moderna (`Mapped`). Se logró inyectar la sesión en el endpoint POST, asegurando las transacciones ACID y guardando datos físicamente en `sensorhub.db`.
