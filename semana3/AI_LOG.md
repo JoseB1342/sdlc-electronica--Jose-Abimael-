@@ -9,3 +9,7 @@
 ## [28-07-2026] - Día 2: Persistencia con SQLAlchemy 2.x
 - **Prompt/Interacción:** "Ayuda para conectar SQLite a la arquitectura de SensorHub e implementar modelos de persistencia."
 - **Resultado:** Se configuró el motor y sesión de SQLAlchemy usando la sintaxis moderna (`Mapped`). Se logró inyectar la sesión en el endpoint POST, asegurando las transacciones ACID y guardando datos físicamente en `sensorhub.db`.
+-----------------------------------------
+## [29-07-2026] - Día 3: Inversión de Dependencias (DIP) y Pruebas Unitarias
+- **Prompt/Interacción:** "Ayuda para implementar y probar la lógica de negocio del servicio usando un repositorio fake en memoria, aplicando el principio DIP."
+- **Resultado:** Se creó la abstracción del contrato con `Protocol` y se implementó la clase `ReadingService`. Se construyó un `FakeReadingRepository` para aislar las pruebas de la base de datos y se escribieron tests exitosos en `pytest` que verifican correctamente las reglas de negocio (como el límite del cero absoluto). Las pruebas pasaron en verde priorizando la funcionalidad pura.
