@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from sqlalchemy.orm import Mapped, mapped_column
 from app.db import Base
 
@@ -9,4 +9,4 @@ class ReadingModel(Base):
     sensor_id: Mapped[str] = mapped_column(index=True)
     value: Mapped[float]
     unit: Mapped[str]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(UTC))

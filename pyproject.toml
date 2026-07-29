@@ -1,5 +1,5 @@
 [tool.pytest.ini_options]
-addopts = "--cov=semana2 --cov-report=term-missing --cov-fail-under=80"
+addopts = "--cov=app --cov-report=term-missing --cov-fail-under=80"
 
 [tool.ruff.lint]
 select = ["E","F","I","UP","B"]
