@@ -13,3 +13,7 @@
 ## [29-07-2026] - Día 3: Inversión de Dependencias (DIP) y Pruebas Unitarias
 - **Prompt/Interacción:** "Ayuda para implementar y probar la lógica de negocio del servicio usando un repositorio fake en memoria, aplicando el principio DIP."
 - **Resultado:** Se creó la abstracción del contrato con `Protocol` y se implementó la clase `ReadingService`. Se construyó un `FakeReadingRepository` para aislar las pruebas de la base de datos y se escribieron tests exitosos en `pytest` que verifican correctamente las reglas de negocio (como el límite del cero absoluto). Las pruebas pasaron en verde priorizando la funcionalidad pura.
+-------------------------------------------
+## [30-07-2026] - Día 4: Inyección de Dependencias y Convenciones REST
+- **Prompt/Interacción:** "Ayuda para conectar las capas del proyecto usando FastAPI, implementando los endpoints REST, paginación y manejo de errores."
+- **Resultado:** Se refactorizó `main.py` eliminando rutas temporales e implementando el estándar REST (GET, POST, DELETE). Se utilizó `Depends` de FastAPI para inyectar la conexión de la base de datos hacia el repositorio, y el repositorio hacia el servicio. Se configuraron Schemas de Pydantic para proteger la API (422), manejo de errores lógicos y de búsqueda (400, 404), y se añadieron filtros de límite y fecha para optimizar las consultas GET.
