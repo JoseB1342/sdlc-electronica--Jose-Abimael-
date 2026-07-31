@@ -28,4 +28,4 @@
   - **Enrutamiento (FastAPI):** Exposición de 8 endpoints REST mediante inyección de dependencias (`Depends`), disponibles y documentados en Swagger UI.
   - **Testing y Calidad (QA):** Configuración de un banco de pruebas automatizadas utilizando `pytest`, `pytest-cov` y `TestClient`. 
   - **Resolución de Bugs:** Depuración de errores de indentación (`NameError`), errores de tipeo en métodos y ajustes de aserción en las pruebas.
-- **Resultado:** Sistema API backend robusto, modular y funcional. Se alcanzó exitosamente la métrica de certificación
+- **Resultado:** Sistema API backend robusto, modular y funcional. Se alcanzó exitosamente la métrica de certificación.
