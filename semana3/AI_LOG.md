@@ -17,3 +17,15 @@
 ## [30-07-2026] - Día 4: Inyección de Dependencias y Convenciones REST
 - **Prompt/Interacción:** "Ayuda para conectar las capas del proyecto usando FastAPI, implementando los endpoints REST, paginación y manejo de errores."
 - **Resultado:** Se refactorizó `main.py` eliminando rutas temporales e implementando el estándar REST (GET, POST, DELETE). Se utilizó `Depends` de FastAPI para inyectar la conexión de la base de datos hacia el repositorio, y el repositorio hacia el servicio. Se configuraron Schemas de Pydantic para proteger la API (422), manejo de errores lógicos y de búsqueda (400, 404), y se añadieron filtros de límite y fecha para optimizar las consultas GET.
+-----------------------------------------------
+## [31-07-2026] - Día 5: Ejercicio Integrador API SensorHub (CRUD Completo y Testing)
+
+- **Objetivo:** Construir una API REST completa para el registro de sensores y lecturas, aplicando una arquitectura limpia de 4 capas, reglas físicas de validación y pruebas de cobertura.
+- **Acciones realizadas:**
+  - **Refactorización y Modelado:** Creación del modelo SQL `SensorModel` y separación estructurada de los esquemas en `schemas.py`.
+  - **Validación Física (Pydantic):** Implementación de decoradores `@model_validator` para interceptar y rechazar datos físicamente imposibles (ej. temperatura < -273.15 °C o humedad > 100%) antes de tocar la base de datos (Error 422).
+  - **Repositorios y Servicios:** Desarrollo de la capa de acceso a datos con soporte para *Soft Delete* (apagado lógico) y reglas de negocio para evitar colisiones de registro de sensores (Error 409).
+  - **Enrutamiento (FastAPI):** Exposición de 8 endpoints REST mediante inyección de dependencias (`Depends`), disponibles y documentados en Swagger UI.
+  - **Testing y Calidad (QA):** Configuración de un banco de pruebas automatizadas utilizando `pytest`, `pytest-cov` y `TestClient`. 
+  - **Resolución de Bugs:** Depuración de errores de indentación (`NameError`), errores de tipeo en métodos y ajustes de aserción en las pruebas.
+- **Resultado:** Sistema API backend robusto, modular y funcional. Se alcanzó exitosamente la métrica de certificación

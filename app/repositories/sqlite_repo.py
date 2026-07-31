@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session 
 from sqlalchemy import select
 from datetime import datetime
+from app.models.sensor import SensorModel
 
 from app.models.reading import ReadingModel
 
@@ -34,3 +35,31 @@ class SQLiteReadingRepository:
         if reading:
             self.db.delate(reading)
             self.db.commit()
+
+#----------------------------------------------
+
+class SQLiteSensorRepository:
+    def __init__(self, db: Session):
+        self.db = db
+
+    def add(self, sensor_id: str, sensor_type: str, location: str) -> SensorModel:
+        db_sensor = SensorModel(id=sensor_id, type=sensor_type, location=location)
+        self.db.add(db_sensor)
+        self.db.commit()
+        self.db.refresh(db_sensor)
+        return db_sensor
+
+    def get_by_id(self, sensor_id: str) -> SensorModel | None:
+        return self.db.get(SensorModel, sensor_id)
+
+    def list_all(self, limit: int, offset: int) -> list[SensorModel]:
+        query = select(SensorModel).offset(offset).limit(limit)
+        return list(self.db.scalars(query).all())
+
+    def deactivate(self, sensor_id: str) -> bool:
+        sensor = self.get_by_id(sensor_id)
+        if sensor:
+            sensor.is_active = False 
+            self.db.commit()
+            return True
+        return False
