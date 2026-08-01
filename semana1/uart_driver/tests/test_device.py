@@ -1,7 +1,9 @@
 import pytest
+
 from semana1.uart_driver.config import UartConfig
-from semana1.uart_driver.parsers import ModbusParser, NMEAParser
 from semana1.uart_driver.device import UartDevice
+from semana1.uart_driver.parsers import ModbusParser, NMEAParser
+
 
 def test_device_error_no_conectado():
     """

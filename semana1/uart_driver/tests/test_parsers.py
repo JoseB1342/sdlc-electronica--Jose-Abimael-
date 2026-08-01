@@ -1,5 +1,7 @@
 import pytest
-from semana1.uart_driver.parsers import ModbusParser, NMEAParser, CanSimplificadoParser
+
+from semana1.uart_driver.parsers import CanSimplificadoParser, ModbusParser, NMEAParser
+
 
 def test_modbus_parser_valido():
     """

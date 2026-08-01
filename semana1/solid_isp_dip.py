@@ -1,5 +1,6 @@
-from typing import Protocol, List, Optional
 from abc import ABC, abstractmethod
+from typing import Protocol
+
 
 class SensorRecording:
     def __init__ (self, Sensor_id:str, value: float, Timestamp: str) -> None:
@@ -76,7 +77,7 @@ class DataProcessMal:
 """Prinicpio D Bien"""
 class DataRepository(Protocol):
     def save(self, reading: SensorRecording) -> None:...
-    def get_latest(self,sensor_id: str) -> Optional[SensorRecording]:...
+    def get_latest(self,sensor_id: str) -> SensorRecording | None:...
 
 class DataProcessor:
     def __init__(self, repository: DataRepository) -> None: 
@@ -85,17 +86,17 @@ class DataProcessor:
     def procesar(self, reading: SensorRecording) ->None:
         self._repo.save(reading)
 
-    def obtener_ultimo(self, sensor_id: str) -> Optional[SensorRecording]:
+    def obtener_ultimo(self, sensor_id: str) -> SensorRecording | None:
         return self._repo.get_latest(sensor_id)
     
 class InMemoryRepository(DataRepository):
     def __init__(self) -> None:
-        self.storage : List[SensorRecording] = []
+        self.storage : list[SensorRecording] = []
 
     def save(self,reading: SensorRecording) -> None:
         self.storage.append(reading)
 
-    def get_latest(self, sensor_id: str,) -> Optional[SensorRecording]:
+    def get_latest(self, sensor_id: str,) -> SensorRecording | None:
         for r in reversed(self.storage):
             if  r.sensor_id == sensor_id:
                 return r 

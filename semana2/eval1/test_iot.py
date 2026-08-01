@@ -1,4 +1,3 @@
-import pytest
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -9,8 +8,10 @@ from semana2.eval1.iot import (
     ConsoleAlertStrategy,
     FileAlertStrategy,
     SensorReading,
-    SensorSimulator
+    SensorSimulator,
 )
+
+
 def test_sensor_reading_creation() -> None:
     reading = SensorReading(sensor_id="SENS-01", temperature=25.0, humidity=50.0)
     

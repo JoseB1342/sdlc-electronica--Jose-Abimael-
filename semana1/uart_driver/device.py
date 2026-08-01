@@ -2,7 +2,8 @@ import json
 import logging
 import threading
 from collections import deque
-from typing import List, Dict, Any, Optional
+from typing import Any
+
 from semana1.uart_driver.config import UartConfig
 from semana1.uart_driver.parsers import MenssageParser
 
@@ -15,7 +16,7 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 class UartDevice:
-    def __init__(self, config: UartConfig, parsers: List[MenssageParser], max_buffer_size: int = 64):
+    def __init__(self, config: UartConfig, parsers: list[MenssageParser], max_buffer_size: int = 64):
         """
         DIP: Inyectamos la configuración inmutable y la lista de parsers abstractos.
         """
@@ -27,7 +28,7 @@ class UartDevice:
         self._buffer: deque = deque(maxlen=max_buffer_size)
         self._lock = threading.Lock()
 
-    def _log_json(self, level: str, event: str, details: Dict[str, Any]) -> None:
+    def _log_json(self, level: str, event: str, details: dict[str, Any]) -> None:
         """Helper para estructurar logs como diccionarios serializables a JSON"""
         log_payload = {"event": event, **details}
         mensaje_json = json.dumps(log_payload)
@@ -61,7 +62,7 @@ class UartDevice:
             for b in raw_bytes:
                 self._buffer.append(b)
 
-    def read_and_parse(self) -> Optional[Dict[str, Any]]:
+    def read_and_parse(self) -> dict[str, Any] | None:
         """
         Extrae los bytes almacenados en el buffer circular y busca un parser compatible.
         """

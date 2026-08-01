@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional
+
 
 class SensorReading:
     def __init__(self, sensor_id: str, value: float, timestamp: str):
@@ -53,26 +53,26 @@ class AlertSender(ABC):
     @abstractmethod
     # CORRECCIÓN: Estandarización del tipo de 'threshold' a float y retorno '-> Optional[str]' 
     # debido a que las alertas solo devuelven texto si se cruza el umbral
-    def send_alert(self, reading: SensorReading, threshold: float) -> Optional[str]:
+    def send_alert(self, reading: SensorReading, threshold: float) -> str | None:
         pass
 
 class ConsoleAlertSender(AlertSender):
-    def send_alert(self, reading: SensorReading, threshold: float) -> Optional[str]:
+    def send_alert(self, reading: SensorReading, threshold: float) -> str | None:
         if reading.value > threshold:
             return f"[console] Alerta: El valor del sensor {reading.sensor_id} excede el umbral de {threshold}. Valor actual: {reading.value}"
         # CORRECCIÓN: Si no entra al if, debe retornar explícitamente un valor para no violar la firma de tipos
         return None
 
 class FileAlertSender(AlertSender):
-    def send_alert(self, reading: SensorReading, threshold: float) -> Optional[str]:
+    def send_alert(self, reading: SensorReading, threshold: float) -> str | None:
         if reading.value > threshold:
             with open("alertas.txt", "a") as file:
                 file.write(f"[file] Alerta: El valor del sensor {reading.sensor_id} excede el umbral de {threshold}. Valor actual: {reading.value}\n")
-            return f"[file] Alerta escrita en disco"
+            return "[file] Alerta escrita en disco"
         return None
 
 class EmailAlertSender(AlertSender):
-    def send_alert(self, reading: SensorReading, threshold: float) -> Optional[str]:
+    def send_alert(self, reading: SensorReading, threshold: float) -> str | None:
         if reading.value > threshold:
             return f"[email] Alerta: El valor del sensor {reading.sensor_id} excede el umbral de {threshold}. Valor actual: {reading.value}"
         return None
@@ -82,7 +82,7 @@ class AnomalyDetector:
         self.alert_sender = alert_sender
 
     # CORRECCIÓN: La firma declaraba '-> None' pero tiene un return de texto interno. Se cambia a '-> Optional[str]'
-    def detectar_anomalia(self, reading: SensorReading, threshold: float) -> Optional[str]:
+    def detectar_anomalia(self, reading: SensorReading, threshold: float) -> str | None:
         if reading.value > threshold:
             self.alert_sender.send_alert(reading, threshold)
             return f"[{self.alert_sender.__class__.__name__.replace('AlertSender', '').lower()}] Alerta: El valor del sensor {reading.sensor_id} excede el umbral de {threshold}. Valor actual: {reading.value}"

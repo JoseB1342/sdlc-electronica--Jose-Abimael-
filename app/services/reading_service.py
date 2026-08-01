@@ -1,6 +1,8 @@
-from typing import Protocol
 from datetime import datetime
+from typing import Protocol
+
 from app.models.reading import ReadingModel
+
 
 class ReadingRepository(Protocol):
     def add(self, sensor_id: str, value: float, unit: str) -> ReadingModel: ...

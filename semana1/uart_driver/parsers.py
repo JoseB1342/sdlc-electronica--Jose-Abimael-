@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Any
+
 
 class MenssageParser(ABC):
     @abstractmethod
@@ -10,7 +11,7 @@ class MenssageParser(ABC):
         pass
 
     @abstractmethod
-    def parse(self,data: bytes) -> Dict[str, Any]:
+    def parse(self,data: bytes) -> dict[str, Any]:
         """
         Decodifica la trama cruda y devuelve un diccionario con los datos estructurados.
         Levanta ValueError si la trama está corrupta.
@@ -21,7 +22,7 @@ class ModbusParser(MenssageParser):
     def can_parse(self, data:bytes) -> bool:
         return len(data) >= 4 and data[0] in [0x01, 0x02, 0x03]
     
-    def parse(self, data: bytes) ->Dict[str, Any]:
+    def parse(self, data: bytes) ->dict[str, Any]:
         if not self.can_parse(data):
             raise ValueError("Trama invalida por el protocolo Modbus RTU.")
 
@@ -43,7 +44,7 @@ class NMEAParser(MenssageParser):
         except Exception:
             return False 
             
-     def parse (self, data:  bytes) ->Dict[str, Any]:
+     def parse (self, data:  bytes) ->dict[str, Any]:
         if not self.can_parse(data):
          raise ValueError("Trama invalida para el protocolo NMEA GPS.")
         
@@ -59,7 +60,7 @@ class NMEAParser(MenssageParser):
                 "longitud": float(partes[4]) if len(partes) > 4 and partes[4] else 0.0
             }
         except Exception as e:
-            raise ValueError(f"Error parseando sentencia NMEA corrupta: {str(e)}")
+            raise ValueError(f"Error parseando sentencia NMEA corrupta: {str(e)}") from e
         
 class CanSimplificadoParser(MenssageParser):
     """
@@ -69,7 +70,7 @@ class CanSimplificadoParser(MenssageParser):
     def can_parse(self, data: bytes) -> bool:
         return len(data) >= 3 and  data[2] <=8
     
-    def parse(self, data: bytes) -> Dict[str, Any]:
+    def parse(self, data: bytes) -> dict[str, Any]:
         if not self.can_parse(data):
             raise  ValueError("Trama invalida para protocolo can simplificado")
         

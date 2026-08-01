@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+
 from app.main import app
 
 # Genebrar las señales
@@ -17,7 +18,7 @@ def test_crear_sensor():
 def test_listar_sensores():
     response = client.get("/sensors?limit=10&offset=0")
     assert response.status_code == 200
-    assert type(response.json()) == list
+    assert isinstance(response.json(), list)
 
 def test_crear_lectura_valida():
     response = client.post(
@@ -53,7 +54,7 @@ def test_sensor_duplicado_conflicto():
 def test_listar_lecturas_sensor():
     response = client.get(f"/sensors/{TEST_SENSOR_ID}/readings")
     assert response.status_code == 200
-    assert type(response.json()) == list
+    assert isinstance(response.json(), list)
 
 #-----------------------------------------
 def test_obtener_sensor_no_existente():

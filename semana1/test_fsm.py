@@ -1,13 +1,26 @@
 import pytest
+
 # Aquí le decimos a Python que vaya a tu archivo fsm_demo y traiga el semáforo
 from semana1.fsm_demo import TrafficLightFSM, TrafficLightState
-from semana1.solid_srp_ocp_lsp import AnomalyDetector, ConsoleAlertSender, EmailAlertSender, SensorReading, ViolationOCP
-from semana1.solid_srp_ocp_lsp import (
-    TemperatureSensorMal, HumiditySensorMal, 
-    TemperatureSensor, HumiditySensor
+from semana1.solid_isp_dip import (
+    DataProcessMal,
+    DataProcessor,
+    InMemoryRepository,
+    SensorBasicoTemperatura,
+    SensorBasicoTemperaturaMal,
+    SensorInteligenteIndustrial,
 )
-from semana1.solid_isp_dip import SensorBasicoTemperaturaMal, SensorBasicoTemperatura, SensorInteligenteIndustrial
-from semana1.solid_isp_dip import DataProcessMal, DataProcessor, InMemoryRepository
+from semana1.solid_srp_ocp_lsp import (
+    AnomalyDetector,
+    ConsoleAlertSender,
+    EmailAlertSender,
+    HumiditySensor,
+    HumiditySensorMal,
+    SensorReading,
+    TemperatureSensor,
+    TemperatureSensorMal,
+    ViolationOCP,
+)
 
 
 def test_initial_state():

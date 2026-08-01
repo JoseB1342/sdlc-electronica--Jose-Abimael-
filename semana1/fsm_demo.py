@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+
 class TrafficLightState(Enum): # Aqui se nombra la clase heredada de Enum, que es una enumeración de estados posibles para un semáforo.
     RED = auto()
     GREEN = auto()

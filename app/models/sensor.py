@@ -1,7 +1,9 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
+
 from app.db import Base
-from typing import List
+
 
 class SensorModel(Base):
     __tablename__ = "sensors"
@@ -11,4 +13,4 @@ class SensorModel(Base):
     location: Mapped[str] = mapped_column(String)
     is_active: Mapped[bool] = mapped_column(default=True)
 
-    readings = Mapped[List]
+    readings = Mapped[list]

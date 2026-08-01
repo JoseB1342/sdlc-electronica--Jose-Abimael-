@@ -1,6 +1,9 @@
-import pytest
 import json
+
+import pytest
+
 from semana1.uart_driver.recorder import DataRecorder
+
 
 def test_recorder_escritura_json_lines(tmp_path):
     """
@@ -18,7 +21,7 @@ def test_recorder_escritura_json_lines(tmp_path):
     recorder.record(dato2)
     
     # Leemos el archivo físico generado para comprobar su estructura
-    with open(archivo_prueba, "r", encoding="utf-8") as f:
+    with open(archivo_prueba, encoding="utf-8") as f:
         lineas = f.readlines()
         
     assert len(lineas) == 2

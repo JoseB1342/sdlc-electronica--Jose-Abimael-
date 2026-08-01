@@ -1,15 +1,17 @@
-from sqlalchemy.orm import Session 
-from sqlalchemy import select
 from datetime import datetime
-from app.models.sensor import SensorModel
+
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from app.models.reading import ReadingModel
+from app.models.sensor import SensorModel
+
 
 class SQLiteReadingRepository:
     def __init__(self, db: Session):
         self.db = db 
 
-    def add(self, sensor_id: str, value: str, unit: str) -> ReadingModel:
+    def add(self, sensor_id: str, value: float, unit: str) -> ReadingModel:
         db_reading = ReadingModel(sensor_id=sensor_id, value=value, unit=unit)
         self.db.add(db_reading)
         self.db.commit()
@@ -22,7 +24,7 @@ class SQLiteReadingRepository:
         if from_date:
             query = query.where(ReadingModel.created_at >= from_date)
         if to_date:
-            query = query.where(ReadingModel.crated_at <= to_date)
+            query = query.where(ReadingModel.created_at <= to_date)
 
         query = query.offset(offset).limit(limit)
         return list(self.db.scalars(query).all())
@@ -30,11 +32,12 @@ class SQLiteReadingRepository:
     def get_by_id(self, reading_id:int) -> ReadingModel | None:
         return self.db.get(ReadingModel, reading_id)
 
-    def delate (self, reading_id: int) -> ReadingModel | None:
+    def delete (self, reading_id: int) -> None:
         reading = self.get_by_id(reading_id)
         if reading:
-            self.db.delate(reading)
+            self.db.delete(reading)
             self.db.commit()
+        return None
 
 #----------------------------------------------
 

@@ -1,8 +1,10 @@
+from datetime import UTC, datetime
+
 import pytest
-from datetime import datetime, UTC
 
 from app.models.reading import ReadingModel
 from app.services.reading_service import ReadingService
+
 
 class FakeReadingRepository:
     def __init__(self):

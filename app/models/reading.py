@@ -1,6 +1,9 @@
-from datetime import datetime, UTC
+from datetime import UTC, datetime
+
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.db import Base
+
 
 class ReadingModel(Base):
     __tablename__ = "readings"

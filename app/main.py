@@ -1,19 +1,16 @@
-from fastapi import FastAPI, Depends, HTTPException, Query, status
-from sqlalchemy.orm import Session
 from datetime import datetime
 
-from app.db import engine, Base, SessionLocal
+from fastapi import Depends, FastAPI, HTTPException, Query, status
+from sqlalchemy.orm import Session
+
+from app.db import Base, SessionLocal, engine
 
 # 1. Importacion para que SQLite cree tablas
-from app.models.sensor import SensorModel
-from app.models.reading import ReadingModel
+# 3. Importamos los Repositorios (Drivers)
+from app.repositories.sqlite_repo import SQLiteReadingRepository, SQLiteSensorRepository
 
 # 2. Fusibles pydantic
-from app.schemas import SensorCreate, SensorOut, ReadingCreate, SensorReadingOut
-
-# 3. Importamos los Repositorios (Drivers)
-from app.repositories.sqlite_repo import SQLiteReadingRepository
-from app.repositories.sqlite_repo import SQLiteSensorRepository 
+from app.schemas import ReadingCreate, SensorCreate, SensorOut, SensorReadingOut
 
 # 4. Importamos los Servicios
 from app.services.reading_service import ReadingService
@@ -51,7 +48,7 @@ def create_sensor(sensor: SensorCreate, service: SensorService = Depends(get_sen
         return service.register_sensor(sensor.id, sensor.type, sensor.location)
     except ValueError as e:
         # 409 Conflict: El cliente intenta crear algo que ya existe (Ej. ID duplicado)
-        raise HTTPException(status_code=409, detail=str(e))
+        raise HTTPException(status_code=409, detail=str(e)) from e
 
 # 2. Listar todos los Sensores
 @app.get("/sensors", response_model=list[SensorOut])
@@ -75,8 +72,8 @@ def get_sensor(sensor_id: str, service: SensorService = Depends(get_sensor_servi
 def delete_sensor(sensor_id: str, service: SensorService = Depends(get_sensor_service)):
     try:
         service.remove_sensor(sensor_id)
-    except KeyError:
-        raise HTTPException(status_code=404, detail="Sensor no encontrado")
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail="Sensor no encontrado") from e
     return None
 
 
@@ -86,7 +83,7 @@ def create_reading(sensor_id: str, reading: ReadingCreate, service: ReadingServi
     try:
         return service.record(sensor_id, reading.value, reading.unit)
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 @app.get("/sensors/{sensor_id}/readings", response_model=list[SensorReadingOut])
 def list_readings(
