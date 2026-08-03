@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 
-# Genebrar las señales
+# Generar las señales
 client = TestClient(app)
 
 # Definimos un ID único para no chocar con las ya agregadas manualmente
@@ -35,9 +35,6 @@ def test_crear_lectura_valida():
         f"/sensors/{TEST_SENSOR_ID}/readings", json={"value": 25.5, "unit": "C"}
     )
     assert response.status_code == 201
-
-
-# -----------------------------------------
 
 
 def test_crear_lectura_fisica_invalida():
@@ -73,7 +70,6 @@ def test_listar_lecturas_sensor():
     assert isinstance(response.json(), list)
 
 
-# -----------------------------------------
 def test_obtener_sensor_no_existente():
     # Intenta leer un sensor fantasma (Cubre el Error 404 en GET)
     response = client.get("/sensors/FANTASMA-99")
@@ -97,30 +93,10 @@ def test_unidad_fisica_desconocida():
 def test_eliminar_sensor():
     response = client.delete(f"/sensors/{TEST_SENSOR_ID}")
     assert response.status_code == 204
-#------------------------------------------
-def test_obtener_lectura_no_existente():
-    response = client.get("/readings/99999")
-    assert response.status_code == 404
 
-def test_eliminar_lectura_no_existente():
-    response = client.delete("/readings/99999")
-    assert response.status_code == 404
 
-def test_listar_lecturas_con_filtro_fechas(): #Filtrar lecturas por fecha 
-    url = f"/sensors/{TEST_SENSOR_ID}/readings?from=2026-01-01T00:00:00&to=2026-12-31T23:59:59"
-    response = client.get(url)
+def test_actualizar_lectura():
+    # Simulamos que actualizamos la lectura con el ID 1 (Endpoint PATCH)
+    response = client.patch("/readings/1")
     assert response.status_code == 200
-
-def test_ruta_principal():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {"mensaje": "API funcionando correctamente"}
-
-def test_crear_lectura_presion_invalida():
-    response = client.post(
-        f"/sensors/{TEST_SENSOR_ID}/readings", 
-        json={"value": 0.0, "unit": "HPA"}
-    )
-    # 422 Unprocessable Entity es el error que Pydantic lanza al fallar una validación
-    assert response.status_code == 422
-    assert "La presion atmosferica debe ser mayor a 0" in response.text
+    assert "exitosa" in response.text

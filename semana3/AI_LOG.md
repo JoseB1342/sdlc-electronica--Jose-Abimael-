@@ -29,3 +29,12 @@
   - **Testing y Calidad (QA):** Configuración de un banco de pruebas automatizadas utilizando `pytest`, `pytest-cov` y `TestClient`. 
   - **Resolución de Bugs:** Depuración de errores de indentación (`NameError`), errores de tipeo en métodos y ajustes de aserción en las pruebas.
 - **Resultado:** Sistema API backend robusto, modular y funcional. Se alcanzó exitosamente la métrica de certificación.
+--------------------------------------------
+## [01-08-2026] - Cierre Semana 3: Análisis Estático, QA y Pull Request
+- **Objetivo:** Preparar el código para producción (Nivel Alto Potencial) aplicando análisis estático estricto y abriendo el PR para la revisión por pares.
+- **Pront Enciado** Ayuda con la correccion de errores y filtrado de errores de de reglas esteticas.
+- **Acciones realizadas:**
+  - **Linter (Ruff):** Se creó el archivo `pyproject.toml` para ignorar falsos positivos de FastAPI (B008) y reglas estéticas (E501). Se corrigieron bugs lógicos reales como el rastreo forense de excepciones (`raise ... from e`) y el uso seguro de `isinstance()` en las pruebas.
+  - **Tipado Estricto (Mypy):** Se depuraron discrepancias entre los Contratos (Protocols) y los Repositorios de SQLite, alineando los tipos de datos de entrada (`value: float`) y los retornos de las funciones (`-> None`). Se logró el estatus `Success: no issues found`.
+  - **Control de Versiones:** Se aplicó el flujo de trabajo profesional creando una rama secundaria (`entrega-final`) para aislar los cambios y poder abrir un Pull Request hacia `main`, habilitando el proceso de Peer Review.
+- **Resultado:** Código 100% blindado contra bugs lógicos y de tipado, y el Pull Request creado exitosamente en GitHub.

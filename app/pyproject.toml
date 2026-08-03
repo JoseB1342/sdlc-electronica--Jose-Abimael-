@@ -1,5 +1,4 @@
 [tool.ruff]
-# Puedes subir el límite de caracteres de 88 (antiguo) a 120 (monitores modernos)
 line-length = 120
 
 [tool.ruff.lint]

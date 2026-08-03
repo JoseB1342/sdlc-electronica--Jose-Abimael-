@@ -9,16 +9,18 @@ from app.models.sensor import SensorModel
 
 class SQLiteReadingRepository:
     def __init__(self, db: Session):
-        self.db = db 
+        self.db = db
 
     def add(self, sensor_id: str, value: float, unit: str) -> ReadingModel:
         db_reading = ReadingModel(sensor_id=sensor_id, value=value, unit=unit)
         self.db.add(db_reading)
         self.db.commit()
         self.db.refresh(db_reading)
-        return db_reading 
+        return db_reading
 
-    def list_for_sensor(self, sensor_id:str, limit:int, offset:int, from_date: datetime | None, to_date: datetime | None) -> list[ReadingModel]:
+    def list_for_sensor(
+        self, sensor_id: str, limit: int, offset: int, from_date: datetime | None, to_date: datetime | None
+    ) -> list[ReadingModel]:
         query = select(ReadingModel).where(ReadingModel.sensor_id == sensor_id)
 
         if from_date:
@@ -26,20 +28,22 @@ class SQLiteReadingRepository:
         if to_date:
             query = query.where(ReadingModel.created_at <= to_date)
 
-        query = query.offset(offset).limit(limit)
+        query = query.order_by(ReadingModel.created_at.desc()).offset(offset).limit(limit)
         return list(self.db.scalars(query).all())
 
-    def get_by_id(self, reading_id:int) -> ReadingModel | None:
+    def get_by_id(self, reading_id: int) -> ReadingModel | None:
         return self.db.get(ReadingModel, reading_id)
 
-    def delete (self, reading_id: int) -> None:
+    def delete(self, reading_id: int) -> None:
         reading = self.get_by_id(reading_id)
         if reading:
             self.db.delete(reading)
             self.db.commit()
         return None
 
-#----------------------------------------------
+
+# ----------------------------------------------
+
 
 class SQLiteSensorRepository:
     def __init__(self, db: Session):
@@ -62,7 +66,7 @@ class SQLiteSensorRepository:
     def deactivate(self, sensor_id: str) -> bool:
         sensor = self.get_by_id(sensor_id)
         if sensor:
-            sensor.is_active = False 
+            sensor.is_active = False
             self.db.commit()
             return True
         return False

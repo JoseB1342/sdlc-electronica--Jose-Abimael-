@@ -13,10 +13,10 @@ class DataRecorder:
         """
         if not isinstance(data, dict):
             raise TypeError("Los datos a registrar deben ser un diccionario.")
-            
+
         # Convertimos el diccionario a un string JSON en una sola línea y añadimos salto de línea
         linea_json = json.dumps(data) + "\n"
-        
+
         # Modo 'a' (append) para añadir datos al final sin borrar lo anterior
         with open(self.file_path, "a", encoding="utf-8") as f:
             f.write(linea_json)

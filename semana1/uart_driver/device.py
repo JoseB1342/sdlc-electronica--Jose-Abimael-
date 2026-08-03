@@ -10,20 +10,28 @@ from semana1.uart_driver.parsers import MenssageParser
 # Configuración básica de un logger que genera salidas en formato string tipo JSON
 logger = logging.getLogger("UartDevice")
 handler = logging.StreamHandler()
-formatter = logging.Formatter('{"timestamp": "%(asctime)s", "level": "%(levelname)s", "message": %(message)s}')
+formatter = logging.Formatter(
+    '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "message": %(message)s}'
+)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
+
 class UartDevice:
-    def __init__(self, config: UartConfig, parsers: list[MenssageParser], max_buffer_size: int = 64):
+    def __init__(
+        self,
+        config: UartConfig,
+        parsers: list[MenssageParser],
+        max_buffer_size: int = 64,
+    ):
         """
         DIP: Inyectamos la configuración inmutable y la lista de parsers abstractos.
         """
         self.config = config
         self.parsers = parsers
         self.is_connected = False
-        
+
         # Extensión: Buffer circular thread-safe utilizando deques y candados de exclusión
         self._buffer: deque = deque(maxlen=max_buffer_size)
         self._lock = threading.Lock()
@@ -41,11 +49,15 @@ class UartDevice:
         if self.is_connected:
             return
         self.is_connected = True
-        self._log_json("info", "uart_connected", {
-            "baudrate": self.config.baudrate,
-            "parity": self.config.parity,
-            "stop_bits": self.config.stop_bits
-        })
+        self._log_json(
+            "info",
+            "uart_connected",
+            {
+                "baudrate": self.config.baudrate,
+                "parity": self.config.parity,
+                "stop_bits": self.config.stop_bits,
+            },
+        )
 
     def disconnect(self) -> None:
         if not self.is_connected:
@@ -82,11 +94,17 @@ class UartDevice:
             if parser.can_parse(data_to_parse):
                 try:
                     resultado = parser.parse(data_to_parse)
-                    self._log_json("info", "parsing_success", {"protocol": resultado.get("protocolo")})
+                    self._log_json(
+                        "info",
+                        "parsing_success",
+                        {"protocol": resultado.get("protocolo")},
+                    )
                     return resultado
                 except ValueError as e:
                     self._log_json("error", "parsing_error", {"error": str(e)})
                     raise
 
         self._log_json("error", "unknown_protocol", {"raw_bytes": list(data_to_parse)})
-        raise ValueError("Ninguno de los protocolos inyectados pudo parsear la trama de bytes.")
+        raise ValueError(
+            "Ninguno de los protocolos inyectados pudo parsear la trama de bytes."
+        )
