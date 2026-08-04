@@ -38,3 +38,13 @@
   - **Tipado Estricto (Mypy):** Se depuraron discrepancias entre los Contratos (Protocols) y los Repositorios de SQLite, alineando los tipos de datos de entrada (`value: float`) y los retornos de las funciones (`-> None`). Se logró el estatus `Success: no issues found`.
   - **Control de Versiones:** Se aplicó el flujo de trabajo profesional creando una rama secundaria (`entrega-final`) para aislar los cambios y poder abrir un Pull Request hacia `main`, habilitando el proceso de Peer Review.
 - **Resultado:** Código 100% blindado contra bugs lógicos y de tipado, y el Pull Request creado exitosamente en GitHub.
+-----------------------------------
+## [03-08-2026] - Restauración del Sistema y Despliegue en Docker
+- **Objetivo:** Resolver el fallo del motor de Docker por falta de almacenamiento, restablecer el equipo de fábrica y lograr la ejecución de la API en un contenedor.
+- **Pront Enciado** Ayuda con error en el engine de Docker, respaldo de proyecto antes de formatear de fábrica y reinstalación del entorno para levantar el contenedor.
+- **Acciones realizadas:**
+  - **Respaldo y Formateo:** Se sincronizó la configuración de VS Code en la nube, se subió el proyecto a GitHub, se limpió la caché y se restableció Windows de fábrica (Quitar todo) para recuperar espacio.
+  - **Configuración de Entorno:** Se reinstalaron Python y Git asegurando la configuración del PATH. Se clonó el repositorio y se habilitó la ejecución de scripts en PowerShell (`Set-ExecutionPolicy RemoteSigned`).
+  - **Restauración de Dependencias:** Se generó un nuevo entorno virtual (`.venv`) y se instalaron las librerías necesarias mediante `requirements.txt`.
+  - **Despliegue en Docker:** Se actualizó el núcleo de WSL (`wsl --update`), se construyó la imagen (`docker build -t sensorhub:dev .`) y se inicializó el servidor (`docker run -p 8000:8000 sensorhub:dev`).
+- **Resultado:** Equipo local limpio y optimizado, entorno de desarrollo 100% funcional y la API SensorHub ejecutándose exitosamente dentro del contenedor de Docker.
