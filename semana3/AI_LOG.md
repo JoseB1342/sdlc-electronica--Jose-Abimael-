@@ -48,3 +48,13 @@
   - **Restauración de Dependencias:** Se generó un nuevo entorno virtual (`.venv`) y se instalaron las librerías necesarias mediante `requirements.txt`.
   - **Despliegue en Docker:** Se actualizó el núcleo de WSL (`wsl --update`), se construyó la imagen (`docker build -t sensorhub:dev .`) y se inicializó el servidor (`docker run -p 8000:8000 sensorhub:dev`).
 - **Resultado:** Equipo local limpio y optimizado, entorno de desarrollo 100% funcional y la API SensorHub ejecutándose exitosamente dentro del contenedor de Docker.
+----------------------------------------------
+## [04-08-2026] - Orquestación con Docker Compose, PostgreSQL y Alembic
+- **Objetivo:** Orquestar múltiples contenedores enlazando la API con una base de datos PostgreSQL utilizando Docker Compose, e inicializar el control de versiones de la base de datos con Alembic.
+- **Pront Enciado** Ayuda con la creación de docker-compose para PostgreSQL, configuración de variables de entorno dinámicas, inicialización de Alembic y resolución de errores de despliegue (motor apagado y crash de Uvicorn).
+- **Acciones realizadas:**
+  - **Orquestación (Docker Compose):** Se creó el archivo `docker-compose.yml` para levantar en simultáneo los servicios de la API y la base de datos (`postgres:16`), configurando puertos, volúmenes de persistencia y la variable `DATABASE_URL`.
+  - **Conexión Dinámica a Base de Datos:** Se refactorizó `app/db.py` agregando una función para normalizar URLs de conexión y garantizar compatibilidad con despliegues en la nube. Se instaló y documentó el driver `psycopg[binary]` en `requirements.txt`.
+  - **Control de Versiones (Alembic):** Se inicializó Alembic en el proyecto, enlazando `Base.metadata` y la URL dinámica en `env.py`. Se generó la migración inicial (`revision --autogenerate`) y se aplicó a la base de datos (`upgrade head`).
+  - **Troubleshooting y Despliegue:** Se diagnosticó y resolvió el fallo de conexión con el demonio de Docker Desktop. Posteriormente, se solucionó un error de importación en Uvicorn forzando la reconstrucción de la imagen (`docker compose up --build`) para integrar las nuevas dependencias.
+- **Resultado:** Arquitectura multi-contenedor ejecutándose con éxito. La API se conecta dinámicamente a PostgreSQL y el esquema de la base de datos está bajo control de versiones con Alembic, verificado funcionalmente a través de Swagger UI.
