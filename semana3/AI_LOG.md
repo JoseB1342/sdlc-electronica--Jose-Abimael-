@@ -58,3 +58,13 @@
   - **Control de Versiones (Alembic):** Se inicializó Alembic en el proyecto, enlazando `Base.metadata` y la URL dinámica en `env.py`. Se generó la migración inicial (`revision --autogenerate`) y se aplicó a la base de datos (`upgrade head`).
   - **Troubleshooting y Despliegue:** Se diagnosticó y resolvió el fallo de conexión con el demonio de Docker Desktop. Posteriormente, se solucionó un error de importación en Uvicorn forzando la reconstrucción de la imagen (`docker compose up --build`) para integrar las nuevas dependencias.
 - **Resultado:** Arquitectura multi-contenedor ejecutándose con éxito. La API se conecta dinámicamente a PostgreSQL y el esquema de la base de datos está bajo control de versiones con Alembic, verificado funcionalmente a través de Swagger UI.
+---------------------------------------
+## [05-08-2026] - Integración Continua (CI) con GitHub Actions y Análisis Estático
+- **Objetivo:** Implementar un pipeline de Integración Continua (CI) en GitHub Actions y asegurar el cumplimiento de los estándares de calidad del código.
+- **Pront Enciado** Ayuda con la configuración del workflow de GitHub Actions, diagnóstico del "exit code 1" y resolución de múltiples errores de linting (PEP 8) con Ruff.
+- **Acciones realizadas:**
+  - **Configuración del Pipeline:** Se creó la estructura `.github/workflows/ci.yml` para disparar análisis automáticos en eventos `push` y `pull_request` hacia la rama `main`.
+  - **Automatización de Entorno:** Se configuraron los pasos para aprovisionar Ubuntu, instalar Python 3.12 y ejecutar las dependencias y herramientas de calidad (`pytest`, `ruff`, `mypy`).
+  - **Troubleshooting de CI:** Se identificó un fallo en el pipeline (X roja, exit code 1) provocado por 48 violaciones de estilo detectadas por el linter.
+  - **Refactorización y Configuración:** Se aplicó `ruff check . --fix` para correcciones automáticas de sintaxis. Posteriormente, para conservar los comentarios documentales largos sin violar el estándar, se implementó el archivo `pyproject.toml` configurando `line-length = 250`.
+- **Resultado:** Repositorio protegido por un pipeline de CI 100% funcional y en verde. El código ahora es evaluado automáticamente contra estándares de calidad flexibilizados a las necesidades del proyecto.
