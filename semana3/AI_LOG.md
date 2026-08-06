@@ -68,3 +68,13 @@
   - **Troubleshooting de CI:** Se identificó un fallo en el pipeline (X roja, exit code 1) provocado por 48 violaciones de estilo detectadas por el linter.
   - **Refactorización y Configuración:** Se aplicó `ruff check . --fix` para correcciones automáticas de sintaxis. Posteriormente, para conservar los comentarios documentales largos sin violar el estándar, se implementó el archivo `pyproject.toml` configurando `line-length = 250`.
 - **Resultado:** Repositorio protegido por un pipeline de CI 100% funcional y en verde. El código ahora es evaluado automáticamente contra estándares de calidad flexibilizados a las necesidades del proyecto.
+-----------------------------------------
+## [06-08-2026] - Infraestructura como Código y Despliegue Continuo (CD)
+- **Objetivo:** Implementar Infraestructura como Código (IaC) para lograr el Despliegue Continuo de la API y la base de datos en un entorno de producción público (Render).
+- **Pront Enciado** Ayuda para configurar el archivo `render.yaml`, resolver errores de parseo de comandos en Render (exit code 2 y 127) y delegar el script de arranque seguro.
+- **Acciones realizadas:**
+  - **Preparación del Servicio:** Se programó el endpoint `/health` requerido para el monitoreo de vida (health check) del proveedor de nube.
+  - **Infraestructura como Código:** Se redactó el Blueprint `render.yaml` para provisionar automáticamente el servicio web y una base de datos PostgreSQL, inyectando de forma segura la credencial `DATABASE_URL`.
+  - **Troubleshooting de Despliegue:** Se identificó un conflicto en el intérprete de comandos de Render al procesar operadores lógicos (`&&`). La arquitectura de arranque se refactorizó eliminando el `dockerCommand` del Blueprint y migrando la instrucción `alembic upgrade head && uvicorn...` directamente al `CMD` del `Dockerfile` en formato Shell.
+  - **Despliegue Continuo:** Se conectó el repositorio principal a Render. Gracias a esto, cada nuevo `push` a la rama `main` compila y publica los cambios automáticamente tras pasar las validaciones del CI.
+- **Resultado:** API desplegada exitosamente en internet con una URL pública funcional. La conexión a la base de datos de producción y la creación automatizada de esquemas (Alembic) fueron verificadas.
