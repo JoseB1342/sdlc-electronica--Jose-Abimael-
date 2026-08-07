@@ -11,23 +11,23 @@ class SensorRepository(Protocol):
 
 
 class SensorService:
-    def __init__(self, repo: SensorRepository):
+    def __init__(self, repo: SensorRepository) -> None:
         self._repo = repo
 
-    def register_sensor(self, sensor_id: str, sensor_type: str, location: str):
+    def register_sensor(self, sensor_id: str, sensor_type: str, location: str) -> SensorModel:
         existing = self._repo.get_by_id(sensor_id)
         if existing:
             raise ValueError(f"Conflicto: El sensor con ID {sensor_id} ya esta registrado")
 
         return self._repo.add(sensor_id, sensor_type, location)
 
-    def get_sensor(self, sensor_id: str):
+    def get_sensor(self, sensor_id: str) -> SensorModel | None:
         return self._repo.get_by_id(sensor_id)
 
-    def get_all_sensors(self, limit: int = 100, offset: int = 0):
+    def get_all_sensors(self, limit: int = 100, offset: int = 0) -> list[SensorModel]:
         return self._repo.list_all(limit, offset)
 
-    def remove_sensor(self, sensor_id: str):
+    def remove_sensor(self, sensor_id: str) -> None:
         success = self._repo.deactivate(sensor_id)
         if not success:
             raise KeyError("Sensor no encontrado en la base de datos")

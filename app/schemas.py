@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Self
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
@@ -19,7 +20,7 @@ class ReadingCreate(BaseModel):
     unit: str
 
     @model_validator(mode="after")
-    def check_physical_ranges(self):
+    def check_physical_ranges(self) -> Self:
         unit_upper = self.unit.upper()
 
         if unit_upper in ["C", "CELSIUS"]:

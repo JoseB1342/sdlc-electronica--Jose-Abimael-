@@ -12,9 +12,9 @@ app.include_router(sensor_router.router)
 app.include_router(reading_router.router)
 
 @app.get("/")
-def root():
+def root() -> dict:
     return {"mensaje": "API funcionando correctamente"}
 
 @app.get("/health")
-def health_check():
+def health_check() -> dict:
     return {"status": "ok"}

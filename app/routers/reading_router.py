@@ -1,3 +1,4 @@
+from typing import Any, Iterator
 from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
@@ -9,19 +10,19 @@ from app.services.reading_service import ReadingService
 
 router = APIRouter(tags=["readings"])
 
-def get_db():
+def get_db() -> Iterator[Session]:
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
 
-def get_reading_service(db: Session = Depends(get_db)):
+def get_reading_service(db: Session = Depends(get_db)) -> ReadingService:
     repo = SQLiteReadingRepository(db)
     return ReadingService(repo)
 
 @router.post("/sensors/{sensor_id}/readings", response_model=SensorReadingOut, status_code=status.HTTP_201_CREATED)
-def create_reading(sensor_id: str, reading: ReadingCreate, service: ReadingService = Depends(get_reading_service)):
+def create_reading(sensor_id: str, reading: ReadingCreate, service: ReadingService = Depends(get_reading_service)) -> Any:
     try:
         return service.record(sensor_id, reading.value, reading.unit)
     except ValueError as e:
@@ -35,18 +36,18 @@ def list_readings(
     from_date: datetime | None = Query(None, alias="from"),
     to_date: datetime | None = Query(None, alias="to"),
     service: ReadingService = Depends(get_reading_service)
-):
+) -> Any:
     return service.get_sensor_readings(sensor_id, limit, offset, from_date, to_date)
 
 @router.get("/readings/{reading_id}", response_model=SensorReadingOut)
-def get_reading(reading_id: int, service: ReadingService = Depends(get_reading_service)):
+def get_reading(reading_id: int, service: ReadingService = Depends(get_reading_service)) -> Any:
     reading = service.get_reading(reading_id)
     if not reading:
         raise HTTPException(status_code=404, detail="Lectura no encontrada")
     return reading
 
 @router.delete("/readings/{reading_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_reading(reading_id: int, service: ReadingService = Depends(get_reading_service)):
+def delete_reading(reading_id: int, service: ReadingService = Depends(get_reading_service)) -> None:
     reading = service.get_reading(reading_id)
     if not reading:
         raise HTTPException(status_code=404, detail="Lectura no encontrada")
@@ -55,6 +56,6 @@ def delete_reading(reading_id: int, service: ReadingService = Depends(get_readin
 
 # El PATCH sugerido por tu compañero para actualizar parcialmente
 @router.patch("/readings/{reading_id}", status_code=status.HTTP_200_OK)
-def update_reading(reading_id: int):
+def update_reading(reading_id: int) -> dict[str, str]:
     # Nota: Aquí después implementarás la lógica con la base de datos
     return {"mensaje": f"Lectura {reading_id} actualizada exitosamente"}

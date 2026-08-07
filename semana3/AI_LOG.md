@@ -78,3 +78,13 @@
   - **Troubleshooting de Despliegue:** Se identificó un conflicto en el intérprete de comandos de Render al procesar operadores lógicos (`&&`). La arquitectura de arranque se refactorizó eliminando el `dockerCommand` del Blueprint y migrando la instrucción `alembic upgrade head && uvicorn...` directamente al `CMD` del `Dockerfile` en formato Shell.
   - **Despliegue Continuo:** Se conectó el repositorio principal a Render. Gracias a esto, cada nuevo `push` a la rama `main` compila y publica los cambios automáticamente tras pasar las validaciones del CI.
 - **Resultado:** API desplegada exitosamente en internet con una URL pública funcional. La conexión a la base de datos de producción y la creación automatizada de esquemas (Alembic) fueron verificadas.
+------------------------------------------------
+## [07-08-2026] - Cierre de Evaluación 2: Pipeline de Producción y Documentación
+- **Objetivo:** Consolidar los entregables de la evaluación "Pipeline de producción", integrar las evidencias de Integración Continua y documentar los accesos al entorno de producción.
+- **Pront Enciado** Ayuda con la revisión de la rúbrica de evaluación, obtención del badge de GitHub Actions y actualización del archivo README para entrega final.
+- **Acciones realizadas:**
+  - **Generación de Evidencia CI:** Se obtuvo e integró el *status badge* de GitHub Actions en el repositorio para evidenciar visualmente el éxito del pipeline (ejecución en verde de tests, ruff y mypy).
+  - **Documentación de Entorno Público:** Se estructuró el archivo `README.md` exponiendo de manera clara la URL de producción alojada en Render, incluyendo los accesos directos a los endpoints críticos (`/health` y `/docs`).
+  - **Auditoría de Secretos:** Se verificó la correcta configuración del archivo `.gitignore`, garantizando que ninguna variable de entorno ni credencial (`.env`) haya sido inyectada en el historial de control de versiones.
+  - **Validación de Despliegue Continuo (CD):** Se realizó un *commit* final con la actualización de la documentación, lo que disparó automáticamente el flujo de CI/CD y actualizó el servicio en la nube, demostrando la integración total del ciclo de vida del software.
+- **Resultado:** Proyecto de la Semana 2 concluido exitosamente y alineado al 100% con la rúbrica. La API de SensorHub está contenerizada, protegida por pruebas automatizadas y desplegada públicamente en internet con prácticas de grado industrial.
