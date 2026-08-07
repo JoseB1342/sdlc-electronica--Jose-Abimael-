@@ -61,3 +61,12 @@ Este proyecto está construido utilizando las siguientes herramientas profesiona
 - Aplica a todo el incremento.               - Aplica una historia de usuario especifica.
 - Define la calidad general del trabajo.     - Define la funcionalidad esperada de un requisito.
 - Es estable y compartida de todo el grupo.  - Cambia segun cada historia del usuario.
+-------------------------------------------------------
+# SensorHub API
+[![CI](https://github.com/JoseB1342/sdlc-electronica--Jose-Abimael-/actions/workflows/ci.yml/badge.svg)](https://github.com/JoseB1342/sdlc-electronica--Jose-Abimael-/actions/workflows/ci.yml)
+
+API para la gestión y monitoreo de sensores.
+
+## Enlaces de Producción
+- **Health Check:** [`https://TU_URL_DE_RENDER.onrender.com/health`](https://sensorhub-api-erl4.onrender.com)
+- **Documentación Swagger:** [`https://TU_URL_DE_RENDER.onrender.com/docs`](https://sensorhub-api-erl4.onrender.com)
