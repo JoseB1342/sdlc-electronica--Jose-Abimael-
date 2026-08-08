@@ -87,4 +87,11 @@
   - **Documentación de Entorno Público:** Se estructuró el archivo `README.md` exponiendo de manera clara la URL de producción alojada en Render, incluyendo los accesos directos a los endpoints críticos (`/health` y `/docs`).
   - **Auditoría de Secretos:** Se verificó la correcta configuración del archivo `.gitignore`, garantizando que ninguna variable de entorno ni credencial (`.env`) haya sido inyectada en el historial de control de versiones.
   - **Validación de Despliegue Continuo (CD):** Se realizó un *commit* final con la actualización de la documentación, lo que disparó automáticamente el flujo de CI/CD y actualizó el servicio en la nube, demostrando la integración total del ciclo de vida del software.
-- **Resultado:** Proyecto de la Semana 2 concluido exitosamente y alineado al 100% con la rúbrica. La API de SensorHub está contenerizada, protegida por pruebas automatizadas y desplegada públicamente en internet con prácticas de grado industrial.
+---------------------------------------------------------------
+## [08-08-2026] - Día 6: Cierre de Semana y Preparación de Evaluación
+- **Objetivo:** Auditar los entregables contra la rúbrica de evaluación, validar el checklist de cierre y repasar la estrategia de mitigación de errores (Rollbacks).
+- **Pront Enciado** Revisión del checklist de cierre del currículum, validación de estado actual del repositorio y estrategia de rollback en despliegues continuos.
+- **Acciones realizadas:**
+  - **Auditoría de Entregables:** Se verificó el cumplimiento del nivel "Estándar esperado", confirmando la operatividad de Docker Compose, el pipeline CI/CD en verde, la publicación en Render y la seguridad del historial (cero secretos).
+  - **Estrategia de Rollback:** Se documentó el procedimiento de reversión de despliegues en producción, tanto a nivel de orquestador (Render Rollback) como a nivel de control de versiones (`git revert`).
+- **Resultado:** Proyecto empaquetado, documentado y listo para evaluación. La arquitectura demuestra integración, despliegue y validación continua exitosa.
