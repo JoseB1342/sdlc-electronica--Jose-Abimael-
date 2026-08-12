@@ -43,10 +43,11 @@ def get_sensor(sensor_id: str, service: SensorService = Depends(get_sensor_servi
         raise HTTPException(status_code=404, detail="Sensor no encontrado")
     return sensor
 
-@router.delete("/{sensor_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_sensor(sensor_id: str, service: SensorService = Depends(get_sensor_service)) -> None:
+@router.delete("/{sensor_id}")
+def delete_sensor(sensor_id: str):
     try:
+        # Aquí llamas a tu servicio
         service.remove_sensor(sensor_id)
-    except KeyError as e:
-        raise HTTPException(status_code=404, detail="Sensor no encontrado") from e
-    return None
+        return {"mensaje": "Sensor eliminado exitosamente"}
+    except ValueError as e: # <--- ¡AQUI ESTÁ EL CAMBIO CLAVE!
+        raise HTTPException(status_code=404, detail=str(e))
