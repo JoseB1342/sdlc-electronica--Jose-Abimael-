@@ -44,7 +44,7 @@ def get_sensor(sensor_id: str, service: SensorService = Depends(get_sensor_servi
     return sensor
 
 @router.delete("/{sensor_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_sensor(sensor_id: str, sensor_service: SensorService = Depends(get_sensor_service)):
+def delete_sensor(sensor_id: str, sensor_service: SensorService = Depends(get_sensor_service)) -> dict:
     try:
         sensor_service.remove_sensor(sensor_id)
     except ValueError as e:
