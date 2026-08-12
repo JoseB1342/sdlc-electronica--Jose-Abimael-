@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import Mock
+
+import pytest
 
 # Ajusta estas importaciones a la ruta real de tus archivos
 # from app.models.sensor import SensorModel
@@ -12,7 +13,7 @@ def repo_mock():
 @pytest.fixture
 def sensor_service(repo_mock):
     # ¡Esta es la ruta real que vimos en tu imagen!
-    from app.services.sensor_service import SensorService 
+    from app.services.sensor_service import SensorService
     return SensorService(repo_mock)
 
 # Test 1: Límite máximo (Seguridad)
