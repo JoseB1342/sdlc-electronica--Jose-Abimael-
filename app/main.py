@@ -5,8 +5,8 @@ from app.routers import sensor_router, reading_router
 app = FastAPI(title="SensorHub API REST", version="1.0.0")
 
 # --- ZONA DE PELIGRO ---
-# Esta línea destruirá todas las tablas viejas en Postgres.
-Base.metadata.drop_all(bind=engine) 
+# Comentado para proteger la base de datos en producción
+# Base.metadata.drop_all(bind=engine) 
 # -----------------------
 
 # Crear tablas con el nuevo esquema
