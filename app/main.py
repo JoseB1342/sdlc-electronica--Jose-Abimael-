@@ -4,7 +4,12 @@ from app.routers import sensor_router, reading_router
 
 app = FastAPI(title="SensorHub API REST", version="1.0.0")
 
-# Crear tablas
+# --- ZONA DE PELIGRO ---
+# Esta línea destruirá todas las tablas viejas en Postgres.
+Base.metadata.drop_all(bind=engine) 
+# -----------------------
+
+# Crear tablas con el nuevo esquema
 Base.metadata.create_all(bind=engine)
 
 # Conectar los routers
