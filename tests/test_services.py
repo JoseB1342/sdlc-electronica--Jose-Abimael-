@@ -1,9 +1,10 @@
-from datetime import UTC, datetime
+from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 
-from app.models.reading import ReadingModel
 from app.services.reading_service import ReadingService
+
 
 class FakeReadingRepository:
     def __init__(self):
@@ -35,10 +36,7 @@ def test_record_below_absolute_zero():
 
     assert len(fake_repo._storage) == 0
 
-from types import SimpleNamespace
-from unittest.mock import Mock
 
-from app.services.reading_service import ReadingService
 
 
 def test_record_sends_alert_when_value_exceeds_threshold():
