@@ -130,3 +130,8 @@ def test_crear_lectura_presion_invalida() -> None:
     # 422 Unprocessable Entity es el error que Pydantic lanza al fallar una validación
     assert response.status_code == 422
     assert "La presion atmosferica debe ser mayor a 0" in response.text
+
+def test_listar_alertas_sensor() -> None:
+    response = client.get("/sensors/ROBOT-01/alerts")
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)

@@ -11,5 +11,6 @@ class SensorModel(Base):
     type: Mapped[str] = mapped_column(String)
     location: Mapped[str] = mapped_column(String)
     is_active: Mapped[bool] = mapped_column(default=True)
+    max_threshold: Mapped[float | None] = mapped_column(default=None, nullable=True)
 
     readings = Mapped[list]

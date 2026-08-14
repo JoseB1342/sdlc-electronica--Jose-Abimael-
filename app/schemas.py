@@ -4,10 +4,19 @@ from typing import Self
 from pydantic import BaseModel, ConfigDict, model_validator
 
 
+class Alert(BaseModel):
+    alert_id: str
+    sensor_id: str
+    reading_value: float
+    threshold: float
+    timestamp: datetime
+
+
 class SensorCreate(BaseModel):
     id: str
     type: str
     location: str
+    max_threshold: float | None = None
 
 
 class SensorOut(SensorCreate):

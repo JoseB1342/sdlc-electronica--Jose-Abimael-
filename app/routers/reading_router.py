@@ -4,8 +4,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
+from app.models.sensor import SensorModel
 from app.repositories.sqlite_repo import SQLiteReadingRepository
 from app.schemas import ReadingCreate, SensorReadingOut
+from app.services.alert_strategy import DBAlertStrategy
 from app.services.reading_service import ReadingService
 
 router = APIRouter(tags=["readings"])
@@ -19,12 +21,13 @@ def get_db() -> Iterator[Session]:
 
 def get_reading_service(db: Session = Depends(get_db)) -> ReadingService:
     repo = SQLiteReadingRepository(db)
-    return ReadingService(repo)
+    return ReadingService(repo, DBAlertStrategy(db))
 
 @router.post("/sensors/{sensor_id}/readings", response_model=SensorReadingOut, status_code=status.HTTP_201_CREATED)
-def create_reading(sensor_id: str, reading: ReadingCreate, service: ReadingService = Depends(get_reading_service)) -> Any:
+def create_reading(sensor_id: str, reading: ReadingCreate, service: ReadingService = Depends(get_reading_service), db: Session = Depends(get_db)) -> Any:
     try:
-        return service.record(sensor_id, reading.value, reading.unit)
+        sensor = db.get(SensorModel, sensor_id)
+        return service.record(sensor_id, reading.value, reading.unit, sensor=sensor)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
 

@@ -46,3 +46,22 @@ Para garantizar la fiabilidad del código y probar los casos borde descubiertos 
 3.  `test_register_sensor_datos_vacios`: Asegura el rechazo de inserciones con strings vacíos.
 4.  `test_register_sensor_duplicado`: Valida la lógica de negocio al intentar registrar un ID de sensor previamente existente (usando mocks).
 5.  `test_remove_sensor_inexistente`: Valida que la capa de servicio arroje la excepción correcta cuando el repositorio no logra desactivar un sensor.
+-------------------------------------
+## [14-08-2026] - Actividad del dia viernes
+1° Prompt: "Modifica ReadingService para inyectar alert_strategy y evaluar si la lectura supera el max_threshold. Si lo supera, genera una alerta y llama a send_alert."
+
+Qué generó: El código actualizado de ReadingService con la inyección de dependencias y la validación del umbral.
+
+Qué cambiaste y por qué: "Tuve que corregir el FakeReadingRepository agregando self._storage.append(reading) para que las pruebas anteriores no fallaran debido al estado del mock."
+
+2° Prompt: Solicité una prueba para el endpoint GET /sensors/{sensor_id}/alerts esperando un 200 OK y una lista.
+
+Qué generó: Una prueba usando el TestClient de FastAPI.
+
+Qué cambiaste y por qué: Tuve que mover la prueba de test_services.py a test_main.py para tener acceso al client configurado, y comprobé que falla con un 404 (Fase Roja).
+
+3° Prompt: "Crear AlertModel en SQLAlchemy, implementar DBAlertStrategy que guarde en base de datos, y crear el endpoint GET /sensors/{sensor_id}/alerts."
+
+Qué generó: El modelo de base de datos, la nueva estrategia concreta y el router de FastAPI.
+
+Qué cambiaste y por qué: "Tuve que borrar el archivo .db local para que SQLAlchemy aplicara la nueva tabla de alertas. Al ejecutar las pruebas, todo pasó a verde."

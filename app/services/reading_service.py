@@ -1,7 +1,10 @@
 from datetime import datetime
 from typing import Protocol
+from uuid import uuid4
 
 from app.models.reading import ReadingModel
+from app.schemas import Alert
+from app.services.alert_strategy import AlertStrategy
 
 
 class ReadingRepository(Protocol):
@@ -14,14 +17,29 @@ class ReadingRepository(Protocol):
 
 
 class ReadingService:
-    def __init__(self, repo: ReadingRepository) -> None:
+    def __init__(self, repo: ReadingRepository, alert_strategy: AlertStrategy | None = None) -> None:
         self._repo = repo
+        self.alert_strategy = alert_strategy
 
-    def record(self, sensor_id: str, value: float, unit: str) -> ReadingModel:
+    def record(self, sensor_id: str, value: float, unit: str, sensor: object | None = None) -> ReadingModel:
         if value < -273.15:
             # Esto detonará un Error 400 más adelante
             raise ValueError("Temperatura por debajo del cero absoluto")
-        return self._repo.add(sensor_id, value, unit)
+
+        reading = self._repo.add(sensor_id, value, unit)
+
+        threshold = getattr(sensor, "max_threshold", None) if sensor is not None else None
+        if threshold is not None and value > threshold and self.alert_strategy is not None:
+            alert = Alert(
+                alert_id=str(uuid4()),
+                sensor_id=sensor_id,
+                reading_value=value,
+                threshold=threshold,
+                timestamp=datetime.now(),
+            )
+            self.alert_strategy.send_alert(alert)
+
+        return reading
 
     def get_sensor_readings(
         self,

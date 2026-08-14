@@ -1,10 +1,12 @@
 from typing import Iterator, Any
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
+from app.models.alert import AlertModel
 from app.repositories.sqlite_repo import SQLiteSensorRepository
-from app.schemas import SensorCreate, SensorOut
+from app.schemas import Alert, SensorCreate, SensorOut
 from app.services.sensor_service import SensorService
 
 router = APIRouter(prefix="/sensors", tags=["sensors"])
@@ -42,6 +44,11 @@ def get_sensor(sensor_id: str, service: SensorService = Depends(get_sensor_servi
     if not sensor:
         raise HTTPException(status_code=404, detail="Sensor no encontrado")
     return sensor
+
+@router.get("/{sensor_id}/alerts", response_model=list[Alert])
+def list_alerts(sensor_id: str, db: Session = Depends(get_db)) -> Any:
+    query = select(AlertModel).where(AlertModel.sensor_id == sensor_id).order_by(AlertModel.timestamp.desc())
+    return list(db.scalars(query).all())
 
 @router.delete("/{sensor_id}", status_code=204)
 def delete_sensor(sensor_id: str, sensor_service: SensorService = Depends(get_sensor_service)) -> None:
