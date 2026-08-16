@@ -70,3 +70,4 @@ API para la gestión y monitoreo de sensores.
 ## Enlaces de Producción
 - **Health Check:** [`https://TU_URL_DE_RENDER.onrender.com/health`](https://sensorhub-api-erl4.onrender.com)
 - **Documentación Swagger:** [`https://TU_URL_DE_RENDER.onrender.com/docs`](https://sensorhub-api-erl4.onrender.com)
+.
