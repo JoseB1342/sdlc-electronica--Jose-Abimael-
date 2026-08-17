@@ -45,10 +45,17 @@ def get_reading_service(db: Session = Depends(get_db)) -> ReadingService:
 # ---------------------------------------------------------
 
 
-@router.post("/readings/", status_code=status.HTTP_201_CREATED)
-def create_reading(reading_in: ReadingCreate, service: ReadingService = Depends(get_reading_service))-> Any:
+@router.post("/readings/", status_code=status.HTTP_201_CREATED, response_model=SensorReadingOut)
+def create_reading(
+    reading_in: ReadingCreate, 
+    service: ReadingService = Depends(get_reading_service)
+) -> Any:
     try:
-        return service.record(sensor_id=reading_in.sensor_id, value=reading_in.value, unit=reading_in.unit)
+        return service.record(
+            sensor_id=reading_in.sensor_id, 
+            value=reading_in.value, 
+            unit=reading_in.unit
+        )
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e)) from e
 

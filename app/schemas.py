@@ -51,8 +51,10 @@ class ReadingCreate(BaseModel):
         return self
 
 
-class SensorReadingOut(ReadingCreate):
+class SensorReadingOut(BaseModel):
     id: int
     sensor_id: str
-    created_at: datetime
+    value: float
+    unit: str
+    created_at: datetime 
     model_config = ConfigDict(from_attributes=True)

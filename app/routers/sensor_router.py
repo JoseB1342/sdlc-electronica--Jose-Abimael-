@@ -62,9 +62,12 @@ def list_alerts(
     return alerts
 
 
-@router.delete("/{sensor_id}", status_code=204)
-def delete_sensor(sensor_id: str, sensor_service: SensorService = Depends(get_sensor_service)) -> None:
+@router.delete("/{sensor_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_sensor(
+    sensor_id: str, 
+    sensor_service: SensorService = Depends(get_sensor_service)
+) -> None:
     try:
         sensor_service.remove_sensor(sensor_id)
     except ValueError as e:
-        raise HTTPException(status_code=422, detail=str(e)) from e
+        raise HTTPException(status_code=404, detail=str(e)) from e

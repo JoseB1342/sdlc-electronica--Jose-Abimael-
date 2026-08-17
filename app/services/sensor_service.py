@@ -40,5 +40,4 @@ class SensorService:
     def remove_sensor(self, sensor_id: str) -> None:
         success = self._repo.deactivate(sensor_id)
         if not success:
-            # NUEVO: Usar ValueError en lugar de KeyError
-            raise ValueError("Sensor no encontrado en la base de datos")
+            raise ValueError("Sensor no encontrado") 
