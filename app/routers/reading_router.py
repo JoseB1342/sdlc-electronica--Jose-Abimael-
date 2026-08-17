@@ -25,10 +25,10 @@ def get_db() -> Iterator[Session]:
 
 # Creamos un adaptador rápido para que el servicio pueda buscar el sensor
 class BasicSensorRepo:
-    def __init__(self, db: Session):
+    def __init__(self, db: Session)-> None:
         self.db = db
 
-    def get(self, sensor_id: str):
+    def get(self, sensor_id: str) -> Any:
         return self.db.query(SensorModel).filter(SensorModel.id == sensor_id).first()
 
 
@@ -46,7 +46,7 @@ def get_reading_service(db: Session = Depends(get_db)) -> ReadingService:
 
 
 @router.post("/readings/", status_code=status.HTTP_201_CREATED)
-def create_reading(reading_in: ReadingCreate, service: ReadingService = Depends(get_reading_service)):
+def create_reading(reading_in: ReadingCreate, service: ReadingService = Depends(get_reading_service))-> Any:
     try:
         return service.record(sensor_id=reading_in.sensor_id, value=reading_in.value, unit=reading_in.unit)
     except ValueError as e:
@@ -54,7 +54,7 @@ def create_reading(reading_in: ReadingCreate, service: ReadingService = Depends(
 
 
 @router.get("/readings/{reading_id}")
-def obtener_lectura(reading_id: int, service: ReadingService = Depends(get_reading_service)):
+def obtener_lectura(reading_id: int, service: ReadingService = Depends(get_reading_service)) -> Any:
     lectura = service.get_reading(reading_id)
     if not lectura:
         raise HTTPException(status_code=404, detail="Lectura no encontrada")
