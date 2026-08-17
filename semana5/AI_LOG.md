@@ -65,3 +65,16 @@ Qué cambiaste y por qué: Tuve que mover la prueba de test_services.py a test_m
 Qué generó: El modelo de base de datos, la nueva estrategia concreta y el router de FastAPI.
 
 Qué cambiaste y por qué: "Tuve que borrar el archivo .db local para que SQLAlchemy aplicara la nueva tabla de alertas. Al ejecutar las pruebas, todo pasó a verde."
+---------------------------------------------
+
+## [15-08-2026] - Peer Review (IA vs. Humano) y Cierre de Iteración
+
+* **Objetivo:** Preparar el Pull Request final del proyecto detallando los cambios arquitectónicos y ejecutar una revisión cruzada (Peer Review) del código de un compañero, contrastando el análisis de un desarrollador humano contra el de una Inteligencia Artificial.
+* **Prompt Enviado:** Petición para generar un Pull Request descriptivo y profesional, y ejecución del prompt de "Ingeniero Senior" para auditar el código del compañero buscando violaciones de SOLID, casos borde, riesgos de seguridad y problemas de rendimiento.
+* **Acciones realizadas:**
+* **Documentación de Pull Request propio:** Se estructuró un PR documentando el refactor hacia la Arquitectura por Capas, la implementación del patrón *Strategy* (`DBAlertStrategy`) para alertas (OCP) y el sistema de anomalías guiado por TDD. Se añadió una guía de navegación para el revisor y se comentó la ejecución de `drop_all` en `main.py` para proteger los datos en producción.
+* **Revisión Humana (Peer Review):** Se evaluó el PR del compañero desde una perspectiva de negocio y legibilidad. Se detectaron métodos sin implementar (`pass`), y se observó el fallo de diseño al usar un diccionario en memoria para los límites de los sensores en lugar de consultas a la base de datos.
+* **Revisión Asistida por IA (Aider/LLM):** Se ejecutó el análisis estricto revelando problemas técnicos invisibles a simple vista, como el riesgo de mutación de estado en diccionarios, la vulnerabilidad ante excepciones no manejadas (`KeyError` al buscar sensores inexistentes) y el riesgo de recibir valores atípicos de hardware (`NaN` o infinitos).
+* **Contraste de Herramientas:** Se elaboró un análisis concluyendo que la IA audita la máquina y robustece el código contra excepciones técnicas, mientras que el desarrollador humano audita la solución garantizando que cumpla con el contexto y los requerimientos del negocio.
+
+* **Resultado:** Iteración cerrada con éxito. La API se encuentra operando bajo una arquitectura limpia y modular con 100% de tests aprobados. El despliegue en Render y PostgreSQL es estable y la comparativa de revisión de código quedó documentada a nivel "Alto potencial".

@@ -3,7 +3,7 @@ from app.db import Base, engine
 from app.routers import sensor_router, reading_router
 
 app = FastAPI(title="SensorHub API REST", version="1.0.0")
-
+"Ojo: Aquí comenté el drop_all para proteger PostgreSQL en producción"
 # --- ZONA DE PELIGRO ---
 # Comentado para proteger la base de datos en producción
 # Base.metadata.drop_all(bind=engine) 

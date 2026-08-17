@@ -45,10 +45,17 @@ def get_sensor(sensor_id: str, service: SensorService = Depends(get_sensor_servi
         raise HTTPException(status_code=404, detail="Sensor no encontrado")
     return sensor
 
-@router.get("/{sensor_id}/alerts", response_model=list[Alert])
-def list_alerts(sensor_id: str, db: Session = Depends(get_db)) -> Any:
-    query = select(AlertModel).where(AlertModel.sensor_id == sensor_id).order_by(AlertModel.timestamp.desc())
-    return list(db.scalars(query).all())
+from fastapi import APIRouter, Depends, Query # <--- Importar Query
+
+@router.get("/{sensor_id}/alerts")
+def list_alerts(
+    sensor_id: str, 
+    db: Session = Depends(get_db),
+    limit: int = Query(50, ge=1, le=100), # <--- Límite de 50 por defecto
+    offset: int = Query(0, ge=0)          # <--- Desde dónde empezar
+):
+    alerts = db.query(AlertModel).filter(AlertModel.sensor_id == sensor_id).offset(offset).limit(limit).all()
+    return alerts
 
 @router.delete("/{sensor_id}", status_code=204)
 def delete_sensor(sensor_id: str, sensor_service: SensorService = Depends(get_sensor_service)) -> None:

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.models.alert import AlertModel
 from app.schemas import Alert
 
-
+"Aquí apliqué Inyección de Dependencias para cumplir con OCP"
 class AlertStrategy(Protocol):
     def send_alert(self, alert: Alert) -> None: ...
 

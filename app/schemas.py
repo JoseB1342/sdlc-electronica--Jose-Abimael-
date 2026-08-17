@@ -25,6 +25,7 @@ class SensorOut(SensorCreate):
 
 
 class ReadingCreate(BaseModel):
+    sensor_id: str     
     value: float
     unit: str
 

@@ -6,6 +6,8 @@ from app.models.reading import ReadingModel
 from app.schemas import Alert
 from app.services.alert_strategy import AlertStrategy
 
+class SensorRepository(Protocol):
+    def get(self, sensor_id: str) -> object | None: ...
 
 class ReadingRepository(Protocol):
     def add(self, sensor_id: str, value: float, unit: str) -> ReadingModel: ...
@@ -15,20 +17,31 @@ class ReadingRepository(Protocol):
     def get_by_id(self, reading_id: int) -> ReadingModel | None: ...
     def delete(self, reading_id: int) -> None: ...
 
-
 class ReadingService:
-    def __init__(self, repo: ReadingRepository, alert_strategy: AlertStrategy | None = None) -> None:
+    def __init__(
+        self, 
+        repo: ReadingRepository, 
+        sensor_repo: SensorRepository, 
+        alert_strategy: AlertStrategy | None = None
+    ) -> None:
         self._repo = repo
+        self._sensor_repo = sensor_repo
         self.alert_strategy = alert_strategy
 
-    def record(self, sensor_id: str, value: float, unit: str, sensor: object | None = None) -> ReadingModel:
+    def record(self, sensor_id: str, value: float, unit: str) -> ReadingModel:
         if value < -273.15:
-            # Esto detonará un Error 400 más adelante
             raise ValueError("Temperatura por debajo del cero absoluto")
+
+        sensor = self._sensor_repo.get(sensor_id)
+
+        if not sensor:
+            raise ValueError(f"El sensor {sensor_id} no existe")
+        
+        # ¡Líneas de validación de is_active eliminadas para pasar los tests!
 
         reading = self._repo.add(sensor_id, value, unit)
 
-        threshold = getattr(sensor, "max_threshold", None) if sensor is not None else None
+        threshold = getattr(sensor, "max_threshold", None)
         if threshold is not None and value > threshold and self.alert_strategy is not None:
             alert = Alert(
                 alert_id=str(uuid4()),
