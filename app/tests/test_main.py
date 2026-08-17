@@ -10,6 +10,7 @@ TEST_SENSOR_ID = "ROBOT-01"
 # TESTS DE SENSORES
 # ==========================================
 
+
 def test_crear_sensor() -> None:
     response = client.post(
         "/sensors",
@@ -22,7 +23,7 @@ def test_crear_sensor() -> None:
     assert response.status_code in [
         201,
         409,
-    ]  
+    ]
 
 
 def test_listar_sensores() -> None:
@@ -57,50 +58,36 @@ def test_eliminar_sensor_no_existente() -> None:
 # TESTS DE LECTURAS (CREACIÓN)
 # ==========================================
 
+
 def test_crear_lectura_valida() -> None:
-    response = client.post(
-        "/readings/", 
-        json={"sensor_id": TEST_SENSOR_ID, "value": 25.5, "unit": "C"}
-    )
-    
+    response = client.post("/readings/", json={"sensor_id": TEST_SENSOR_ID, "value": 25.5, "unit": "C"})
+
     print("\n--- ERROR DETALLADO ---")
     print(response.json())
     print("-----------------------")
-    
+
     assert response.status_code == 201
 
 
 def test_crear_lectura_fisica_invalida() -> None:
-    response = client.post(
-        "/readings/", 
-        json={"sensor_id": TEST_SENSOR_ID, "value": -300.0, "unit": "C"}
-    )
+    response = client.post("/readings/", json={"sensor_id": TEST_SENSOR_ID, "value": -300.0, "unit": "C"})
     assert response.status_code == 422
     assert "Física inválida" in response.text
 
 
 def test_crear_lectura_humedad_invalida() -> None:
-    response = client.post(
-        "/readings/", 
-        json={"sensor_id": TEST_SENSOR_ID, "value": 150.0, "unit": "%"}
-    )
+    response = client.post("/readings/", json={"sensor_id": TEST_SENSOR_ID, "value": 150.0, "unit": "%"})
     assert response.status_code == 422
 
 
 def test_unidad_fisica_desconocida() -> None:
-    response = client.post(
-        "/readings/", 
-        json={"sensor_id": TEST_SENSOR_ID, "value": 10.0, "unit": "manzanas"}
-    )
+    response = client.post("/readings/", json={"sensor_id": TEST_SENSOR_ID, "value": 10.0, "unit": "manzanas"})
     assert response.status_code == 422
     assert "manzanas" in response.text
 
 
 def test_crear_lectura_presion_invalida() -> None:
-    response = client.post(
-        "/readings/", 
-        json={"sensor_id": TEST_SENSOR_ID, "value": 0.0, "unit": "HPA"}
-    )
+    response = client.post("/readings/", json={"sensor_id": TEST_SENSOR_ID, "value": 0.0, "unit": "HPA"})
     assert response.status_code == 422
     assert "La presion atmosferica debe ser mayor a 0" in response.text
 
@@ -109,13 +96,14 @@ def test_crear_lectura_presion_invalida() -> None:
 # TESTS DE LECTURAS (BÚSQUEDA Y LISTADO)
 # ==========================================
 
+
 def test_listar_lecturas_sensor() -> None:
     response = client.get(f"/sensors/{TEST_SENSOR_ID}/readings")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
 
-def test_listar_lecturas_con_filtro_fechas() -> None: 
+def test_listar_lecturas_con_filtro_fechas() -> None:
     url = f"/sensors/{TEST_SENSOR_ID}/readings?from=2026-01-01T00:00:00&to=2026-12-31T23:59:59"
     response = client.get(url)
     assert response.status_code == 200
@@ -123,8 +111,9 @@ def test_listar_lecturas_con_filtro_fechas() -> None:
 
 def test_obtener_lectura_no_existente() -> None:
     # Quitar la barra al final
-    response = client.get("/readings/99999") 
+    response = client.get("/readings/99999")
     assert response.status_code == 404
+
 
 def test_eliminar_lectura_no_existente() -> None:
     # Quitar la barra al final
@@ -136,6 +125,7 @@ def test_eliminar_lectura_no_existente() -> None:
 # TESTS DE ALERTAS
 # ==========================================
 
+
 def test_listar_alertas_sensor() -> None:
     response = client.get(f"/sensors/{TEST_SENSOR_ID}/alerts")
     assert response.status_code == 200
@@ -145,6 +135,7 @@ def test_listar_alertas_sensor() -> None:
 # ==========================================
 # TESTS DE LIMPIEZA Y RUTAS PRINCIPALES
 # ==========================================
+
 
 def test_eliminar_sensor() -> None:
     response = client.delete(f"/sensors/{TEST_SENSOR_ID}")

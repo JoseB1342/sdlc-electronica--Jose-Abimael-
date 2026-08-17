@@ -22,9 +22,7 @@ class Reading:
 def convert_celsius_to_fahrenheit(r: Reading) -> Reading:
     if r.sensor_type != SensorType.TEMPERATURE:
         nuevo_valor = (r.value * 9 / 5) + 32
-        return Reading(
-            sensor_id=r.sensor_id, value=nuevo_valor, sensor_type=r.sensor_type
-        )
+        return Reading(sensor_id=r.sensor_id, value=nuevo_valor, sensor_type=r.sensor_type)
     return r
     pass
 

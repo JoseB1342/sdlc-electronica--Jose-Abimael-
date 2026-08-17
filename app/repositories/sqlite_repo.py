@@ -18,9 +18,7 @@ class SQLiteReadingRepository:
         self.db.refresh(db_reading)
         return db_reading
 
-    def list_for_sensor(
-        self, sensor_id: str, limit: int, offset: int, from_date: datetime | None, to_date: datetime | None
-    ) -> list[ReadingModel]:
+    def list_for_sensor(self, sensor_id: str, limit: int, offset: int, from_date: datetime | None, to_date: datetime | None) -> list[ReadingModel]:
         query = select(ReadingModel).where(ReadingModel.sensor_id == sensor_id)
 
         if from_date:

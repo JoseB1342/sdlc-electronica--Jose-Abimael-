@@ -66,9 +66,7 @@ def test_integration_10_sensors_60_cycles(capsys: Any) -> None:
     detector = AnomalyDetector(max_temp=35.0, max_hum=80.0)
     manager = AlertManager(strategies=[ConsoleAlertStrategy()])
 
-    sensors = [
-        SensorSimulator(f"S-{i}", base_temp=25.0, base_hum=50.0) for i in range(9)
-    ]
+    sensors = [SensorSimulator(f"S-{i}", base_temp=25.0, base_hum=50.0) for i in range(9)]
     sensors.append(SensorSimulator("S-DEFECT", base_temp=38.0, base_hum=50.0))
 
     alerts_triggered = 0

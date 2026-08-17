@@ -61,10 +61,7 @@ def test_ocp_vilation():
     detector_mal = ViolationOCP("console")
     lectura = SensorReading("Temp_01", 35.0, "2024-06-01T12:00:00Z")
     resultado = detector_mal.verificar_y_enviar(lectura, 30.0)
-    assert (
-        resultado
-        == "[console] Alerta: El valor del sensor Temp_01 excede el umbral de 30.0. Valor actual: 35.0"
-    )
+    assert resultado == "[console] Alerta: El valor del sensor Temp_01 excede el umbral de 30.0. Valor actual: 35.0"
 
 
 def test_ocp_corrrecto():
@@ -72,17 +69,11 @@ def test_ocp_corrrecto():
 
     # 1. Cambiamos [consola] por [console] para que cuadre con tu clase
     detector_consola = AnomalyDetector(ConsoleAlertSender())
-    assert (
-        detector_consola.detectar_anomalia(lectura, 30.0)
-        == "[console] Alerta: El valor del sensor Temp_01 excede el umbral de 30.0. Valor actual: 35.0"
-    )
+    assert detector_consola.detectar_anomalia(lectura, 30.0) == "[console] Alerta: El valor del sensor Temp_01 excede el umbral de 30.0. Valor actual: 35.0"
 
     # 2. Cambiamos [correo] por [email] para que cuadre con tu clase EmailAlertSender
     detector_email = AnomalyDetector(EmailAlertSender())
-    assert (
-        detector_email.detectar_anomalia(lectura, 30.0)
-        == "[email] Alerta: El valor del sensor Temp_01 excede el umbral de 30.0. Valor actual: 35.0"
-    )
+    assert detector_email.detectar_anomalia(lectura, 30.0) == "[email] Alerta: El valor del sensor Temp_01 excede el umbral de 30.0. Valor actual: 35.0"
 
 
 """///////////////////////////////////////// Principio 3 LISKOV SUBSTITUTION ///////////////////////////////////////////"""

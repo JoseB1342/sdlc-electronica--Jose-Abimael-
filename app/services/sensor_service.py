@@ -34,7 +34,7 @@ class SensorService:
             raise ValueError("Error: El límite debe estar entre 1 y 500.")
         if offset < 0:
             raise ValueError("Error: El offset no puede ser negativo.")
-            
+
         return self._repo.list_all(limit, offset)
 
     def remove_sensor(self, sensor_id: str) -> None:

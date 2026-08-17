@@ -1,6 +1,8 @@
 import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
+
 
 def get_database_url() -> str:
     url = os.getenv("DATABASE_URL", "sqlite:///sensorhub_v2.db")
@@ -10,10 +12,12 @@ def get_database_url() -> str:
         return url.replace("postgresql://", "postgresql+psycopg://", 1)
     return url
 
+
 # El engine ahora usa la función para saber a dónde conectarse
 engine = create_engine(get_database_url())
 
 SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
+
 
 class Base(DeclarativeBase):
     pass

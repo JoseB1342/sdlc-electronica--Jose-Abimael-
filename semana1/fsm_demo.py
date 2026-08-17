@@ -1,9 +1,7 @@
 from enum import Enum, auto
 
 
-class TrafficLightState(
-    Enum
-):  # Aqui se nombra la clase heredada de Enum, que es una enumeración de estados posibles para un semáforo.
+class TrafficLightState(Enum):  # Aqui se nombra la clase heredada de Enum, que es una enumeración de estados posibles para un semáforo.
     RED = auto()
     GREEN = auto()
     YELLOW = auto()
@@ -42,9 +40,7 @@ def test_full_cycle_returns_to_red() -> None:
     fsm.transition()
     fsm.transition()
     fsm.transition()
-    assert (
-        fsm.state == TrafficLightState.RED
-    )  # Verifica que el estado del semaforo volvió a ser rojo después de un ciclo completo.
+    assert fsm.state == TrafficLightState.RED  # Verifica que el estado del semaforo volvió a ser rojo después de un ciclo completo.
 
 
 def test_cycle_counter_increments() -> None:

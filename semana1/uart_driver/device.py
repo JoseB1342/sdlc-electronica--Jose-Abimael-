@@ -10,9 +10,7 @@ from semana1.uart_driver.parsers import MenssageParser
 # Configuración básica de un logger que genera salidas en formato string tipo JSON
 logger = logging.getLogger("UartDevice")
 handler = logging.StreamHandler()
-formatter = logging.Formatter(
-    '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "message": %(message)s}'
-)
+formatter = logging.Formatter('{"timestamp": "%(asctime)s", "level": "%(levelname)s", "message": %(message)s}')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
@@ -105,6 +103,4 @@ class UartDevice:
                     raise
 
         self._log_json("error", "unknown_protocol", {"raw_bytes": list(data_to_parse)})
-        raise ValueError(
-            "Ninguno de los protocolos inyectados pudo parsear la trama de bytes."
-        )
+        raise ValueError("Ninguno de los protocolos inyectados pudo parsear la trama de bytes.")

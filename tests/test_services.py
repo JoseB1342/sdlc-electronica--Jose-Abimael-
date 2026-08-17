@@ -5,33 +5,30 @@ import pytest
 
 from app.services.reading_service import ReadingService
 
+
 class FakeReadingRepository:
     def __init__(self):
-        self._storage = [] 
+        self._storage = []
 
     def add(self, sensor_id: str, value: float, unit: str):
         reading = SimpleNamespace(sensor_id=sensor_id, value=value, unit=unit)
-        self._storage.append(reading) 
+        self._storage.append(reading)
         return reading
 
 
 def test_record_successful():
     fake_repo = FakeReadingRepository()
     mock_sensor_repo = Mock()
-    
+
     # Simular que el sensor existe y está activo
-    mock_sensor_repo.get.return_value = SimpleNamespace(is_active=True, max_threshold=30.0) 
+    mock_sensor_repo.get.return_value = SimpleNamespace(is_active=True, max_threshold=30.0)
 
     # Inyectar AMBOS repositorios
-    service = ReadingService(
-        repo=fake_repo, 
-        sensor_repo=mock_sensor_repo, 
-        alert_strategy=None
-    )
-    
+    service = ReadingService(repo=fake_repo, sensor_repo=mock_sensor_repo, alert_strategy=None)
+
     # Actuar
     reading = service.record(sensor_id="TEMP-01", value=25.0, unit="C")
-    
+
     # Verificar
     assert reading.sensor_id == "TEMP-01"
     assert reading.value == 25.0
@@ -41,9 +38,9 @@ def test_record_successful():
 def test_record_below_absolute_zero():
     fake_repo = FakeReadingRepository()
     mock_sensor_repo = Mock()
-    
+
     # Simular que el sensor existe
-    mock_sensor_repo.get.return_value = SimpleNamespace(is_active=True, max_threshold=30.0) 
+    mock_sensor_repo.get.return_value = SimpleNamespace(is_active=True, max_threshold=30.0)
 
     # OJO: Aquí te faltaba inyectar el sensor_repo
     service = ReadingService(repo=fake_repo, sensor_repo=mock_sensor_repo)
@@ -63,11 +60,7 @@ def test_record_sends_alert_when_value_exceeds_threshold():
     mock_sensor_repo.get.return_value = SimpleNamespace(is_active=True, max_threshold=50.0)
 
     # Inyectamos todo al servicio
-    service = ReadingService(
-        repo=fake_repo, 
-        sensor_repo=mock_sensor_repo, 
-        alert_strategy=alert_strategy
-    )
+    service = ReadingService(repo=fake_repo, sensor_repo=mock_sensor_repo, alert_strategy=alert_strategy)
 
     # OJO: Ya no le pasamos "sensor=sensor" al método record
     service.record(sensor_id="TEMP-01", value=55.0, unit="C")

@@ -1,14 +1,15 @@
 """esquema inicial: sensors y readings
 
 Revision ID: 0fca0b90cac2
-Revises: 
+Revises:
 Create Date: 2026-08-04 08:43:23.568219
 
 """
+
 from collections.abc import Sequence
 
 # revision identifiers, used by Alembic.
-revision: str = '0fca0b90cac2'
+revision: str = "0fca0b90cac2"
 down_revision: str | Sequence[str] | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None

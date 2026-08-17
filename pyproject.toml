@@ -3,6 +3,7 @@ addopts = "--cov=app --cov-report=term-missing --cov-fail-under=80"
 
 [tool.ruff]
 line-length = 250
+ignore = ["B008"]
 
 [tool.ruff.lint]
 select = ["E","F","I","UP","B"]

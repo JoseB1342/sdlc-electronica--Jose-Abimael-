@@ -26,9 +26,7 @@ class ViolacionSRP:
 
 
 class SensorReader:
-    def Read_sensor(
-        self, sensor_id: str, value: float, timestamp: str
-    ) -> SensorReading:
+    def Read_sensor(self, sensor_id: str, value: float, timestamp: str) -> SensorReading:
         lectura = SensorReading(sensor_id, value, timestamp)
         return lectura
 
@@ -82,9 +80,7 @@ class FileAlertSender(AlertSender):
     def send_alert(self, reading: SensorReading, threshold: float) -> str | None:
         if reading.value > threshold:
             with open("alertas.txt", "a") as file:
-                file.write(
-                    f"[file] Alerta: El valor del sensor {reading.sensor_id} excede el umbral de {threshold}. Valor actual: {reading.value}\n"
-                )
+                file.write(f"[file] Alerta: El valor del sensor {reading.sensor_id} excede el umbral de {threshold}. Valor actual: {reading.value}\n")
             return "[file] Alerta escrita en disco"
         return None
 
@@ -128,9 +124,7 @@ class TemperatureSensorMal(BaseSensorMal):
 
 class HumiditySensorMal(BaseSensorMal):
     def get_reading(self) -> float:
-        raise ValueError(
-            "No se puede obtener la lectura de humedad de un sensor de temperatura"
-        )
+        raise ValueError("No se puede obtener la lectura de humedad de un sensor de temperatura")
 
 
 class BaseSensor(ABC):

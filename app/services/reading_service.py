@@ -6,24 +6,20 @@ from app.models.reading import ReadingModel
 from app.schemas import Alert
 from app.services.alert_strategy import AlertStrategy
 
+
 class SensorRepository(Protocol):
     def get(self, sensor_id: str) -> object | None: ...
 
+
 class ReadingRepository(Protocol):
     def add(self, sensor_id: str, value: float, unit: str) -> ReadingModel: ...
-    def list_for_sensor(
-        self, sensor_id: str, limit: int, offset: int, from_date: datetime | None, to_date: datetime | None
-    ) -> list[ReadingModel]: ...
+    def list_for_sensor(self, sensor_id: str, limit: int, offset: int, from_date: datetime | None, to_date: datetime | None) -> list[ReadingModel]: ...
     def get_by_id(self, reading_id: int) -> ReadingModel | None: ...
     def delete(self, reading_id: int) -> None: ...
 
+
 class ReadingService:
-    def __init__(
-        self, 
-        repo: ReadingRepository, 
-        sensor_repo: SensorRepository, 
-        alert_strategy: AlertStrategy | None = None
-    ) -> None:
+    def __init__(self, repo: ReadingRepository, sensor_repo: SensorRepository, alert_strategy: AlertStrategy | None = None) -> None:
         self._repo = repo
         self._sensor_repo = sensor_repo
         self.alert_strategy = alert_strategy
@@ -36,7 +32,7 @@ class ReadingService:
 
         if not sensor:
             raise ValueError(f"El sensor {sensor_id} no existe")
-        
+
         # ¡Líneas de validación de is_active eliminadas para pasar los tests!
 
         reading = self._repo.add(sensor_id, value, unit)

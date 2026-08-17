@@ -13,9 +13,10 @@ def fahrenheit_a_celsius(fahrenheit: float) -> float:
     """
     if not isinstance(fahrenheit, (int, float)):
         raise TypeError("El valor de la temperatura debe ser numérico.")
-    
+
     celsius = (fahrenheit - 32) * 5 / 9
     return round(celsius, 2)
+
 
 # Prueba rápida del código
 if __name__ == "__main__":

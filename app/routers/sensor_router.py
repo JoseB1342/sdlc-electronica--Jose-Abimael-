@@ -1,15 +1,17 @@
-from typing import Iterator, Any
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import select
+from collections.abc import Iterator
+from typing import Any
+
+from fastapi import APIRouter, Depends, HTTPException, Query, status  # <--- Importar Query
 from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
 from app.models.alert import AlertModel
 from app.repositories.sqlite_repo import SQLiteSensorRepository
-from app.schemas import Alert, SensorCreate, SensorOut
+from app.schemas import SensorCreate, SensorOut
 from app.services.sensor_service import SensorService
 
 router = APIRouter(prefix="/sensors", tags=["sensors"])
+
 
 # Inyector local de base de datos
 def get_db() -> Iterator[Session]:
@@ -19,9 +21,11 @@ def get_db() -> Iterator[Session]:
     finally:
         db.close()
 
+
 def get_sensor_service(db: Session = Depends(get_db)) -> SensorService:
     repo = SQLiteSensorRepository(db)
     return SensorService(repo)
+
 
 @router.post("", response_model=SensorOut, status_code=status.HTTP_201_CREATED)
 def create_sensor(sensor: SensorCreate, service: SensorService = Depends(get_sensor_service)) -> Any:
@@ -30,13 +34,11 @@ def create_sensor(sensor: SensorCreate, service: SensorService = Depends(get_sen
     except ValueError as e:
         raise HTTPException(status_code=409, detail=str(e)) from e
 
+
 @router.get("", response_model=list[SensorOut])
-def list_sensors(
-    limit: int = Query(50, ge=1, le=100),
-    offset: int = Query(0, ge=0),
-    service: SensorService = Depends(get_sensor_service)
-) -> Any:
+def list_sensors(limit: int = Query(50, ge=1, le=100), offset: int = Query(0, ge=0), service: SensorService = Depends(get_sensor_service)) -> Any:
     return service.get_all_sensors(limit, offset)
+
 
 @router.get("/{sensor_id}", response_model=SensorOut)
 def get_sensor(sensor_id: str, service: SensorService = Depends(get_sensor_service)) -> Any:
@@ -45,21 +47,24 @@ def get_sensor(sensor_id: str, service: SensorService = Depends(get_sensor_servi
         raise HTTPException(status_code=404, detail="Sensor no encontrado")
     return sensor
 
-from fastapi import APIRouter, Depends, Query # <--- Importar Query
+
+
+
 
 @router.get("/{sensor_id}/alerts")
 def list_alerts(
-    sensor_id: str, 
+    sensor_id: str,
     db: Session = Depends(get_db),
-    limit: int = Query(50, ge=1, le=100), # <--- Límite de 50 por defecto
-    offset: int = Query(0, ge=0)          # <--- Desde dónde empezar
+    limit: int = Query(50, ge=1, le=100),  # <--- Límite de 50 por defecto
+    offset: int = Query(0, ge=0),  # <--- Desde dónde empezar
 ):
     alerts = db.query(AlertModel).filter(AlertModel.sensor_id == sensor_id).offset(offset).limit(limit).all()
     return alerts
+
 
 @router.delete("/{sensor_id}", status_code=204)
 def delete_sensor(sensor_id: str, sensor_service: SensorService = Depends(get_sensor_service)) -> None:
     try:
         sensor_service.remove_sensor(sensor_id)
     except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=422, detail=str(e)) from e

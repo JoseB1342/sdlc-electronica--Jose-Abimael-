@@ -62,9 +62,7 @@ class NMEAParser(MenssageParser):
                 "longitud": float(partes[4]) if len(partes) > 4 and partes[4] else 0.0,
             }
         except Exception as e:
-            raise ValueError(
-                f"Error parseando sentencia NMEA corrupta: {str(e)}"
-            ) from e
+            raise ValueError(f"Error parseando sentencia NMEA corrupta: {str(e)}") from e
 
 
 class CanSimplificadoParser(MenssageParser):
@@ -84,9 +82,7 @@ class CanSimplificadoParser(MenssageParser):
         dlc = data[2]
 
         if len(data) < 3 + dlc:
-            raise ValueError(
-                "La longitud de la trama no coincide con el DLC especifico"
-            )
+            raise ValueError("La longitud de la trama no coincide con el DLC especifico")
 
         payload = list(data[3 : 3 + dlc])
 

@@ -1,5 +1,7 @@
-from typing import Any, Iterator
+from collections.abc import Iterator
 from datetime import datetime
+from typing import Any
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
@@ -12,6 +14,7 @@ from app.services.reading_service import ReadingService
 
 router = APIRouter(tags=["readings"])
 
+
 def get_db() -> Iterator[Session]:
     db = SessionLocal()
     try:
@@ -19,12 +22,15 @@ def get_db() -> Iterator[Session]:
     finally:
         db.close()
 
+
 # Creamos un adaptador rápido para que el servicio pueda buscar el sensor
 class BasicSensorRepo:
     def __init__(self, db: Session):
         self.db = db
+
     def get(self, sensor_id: str):
         return self.db.query(SensorModel).filter(SensorModel.id == sensor_id).first()
+
 
 # Centralizamos la creación del servicio aquí para no repetirlo
 def get_reading_service(db: Session = Depends(get_db)) -> ReadingService:
@@ -33,20 +39,18 @@ def get_reading_service(db: Session = Depends(get_db)) -> ReadingService:
     alert_strategy = DBAlertStrategy(db)
     return ReadingService(reading_repo, sensor_repo, alert_strategy)
 
+
 # ---------------------------------------------------------
 # ENDPOINTS
 # ---------------------------------------------------------
 
+
 @router.post("/readings/", status_code=status.HTTP_201_CREATED)
 def create_reading(reading_in: ReadingCreate, service: ReadingService = Depends(get_reading_service)):
     try:
-        return service.record(
-            sensor_id=reading_in.sensor_id, 
-            value=reading_in.value, 
-            unit=reading_in.unit
-        )
+        return service.record(sensor_id=reading_in.sensor_id, value=reading_in.value, unit=reading_in.unit)
     except ValueError as e:
-        raise HTTPException(status_code=422, detail=str(e))
+        raise HTTPException(status_code=422, detail=str(e)) from e
 
 
 @router.get("/readings/{reading_id}")
@@ -59,12 +63,7 @@ def obtener_lectura(reading_id: int, service: ReadingService = Depends(get_readi
 
 @router.get("/sensors/{sensor_id}/readings", response_model=list[SensorReadingOut])
 def list_readings(
-    sensor_id: str,
-    limit: int = Query(50, ge=1, le=100),
-    offset: int = Query(0, ge=0),
-    from_date: datetime | None = Query(None, alias="from"),
-    to_date: datetime | None = Query(None, alias="to"),
-    service: ReadingService = Depends(get_reading_service)
+    sensor_id: str, limit: int = Query(50, ge=1, le=100), offset: int = Query(0, ge=0), from_date: datetime | None = Query(None, alias="from"), to_date: datetime | None = Query(None, alias="to"), service: ReadingService = Depends(get_reading_service)
 ) -> Any:
     return service.get_sensor_readings(sensor_id, limit, offset, from_date, to_date)
 
