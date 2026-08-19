@@ -14,7 +14,8 @@ class AlertStrategy(Protocol):
 
 class LogAlertStrategy:
     def send_alert(self, alert: Alert) -> None:
-        print(f"[ALERT] sensor_id={alert.sensor_id} alert_id={alert.alert_id} reading_value={alert.reading_value} threshold={alert.threshold} timestamp={alert.timestamp.isoformat()}")
+        # 🔧 Actualizamos también el log para que imprima el mensaje en consola
+        print(f"[ALERT] sensor_id={alert.sensor_id} alert_id={alert.alert_id} reading_value={alert.reading_value} threshold={alert.threshold} message='{alert.message}' status={alert.status} timestamp={alert.timestamp.isoformat()}")
 
 
 class DBAlertStrategy:
@@ -27,6 +28,8 @@ class DBAlertStrategy:
             sensor_id=alert.sensor_id,
             reading_value=alert.reading_value,
             threshold=alert.threshold,
+            message=alert.message,  # 🔧 CONECTAMOS EL MENSAJE AQUÍ
+            status=alert.status,    # 🔧 Y EL ESTADO DE LA ALERTA AQUÍ
             timestamp=alert.timestamp,
         )
         self.db.add(db_alert)

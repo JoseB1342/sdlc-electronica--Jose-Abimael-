@@ -11,6 +11,7 @@ services:
       POSTGRES_USER: sensor
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: sensorhub
+    ports: ["5432:5432"]
     volumes: [pgdata:/var/lib/postgresql/data]
 volumes:
   pgdata:

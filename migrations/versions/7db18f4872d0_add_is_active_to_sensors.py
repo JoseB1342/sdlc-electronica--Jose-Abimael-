@@ -1,16 +1,15 @@
-"""esquema inicial: sensors y readings
+"""add is_active to sensors
 
-Revision ID: 0fca0b90cac2
-Revises:
-Create Date: 2026-08-04 08:43:23.568219
+Revision ID: 7db18f4872d0
+Revises: 2ca3981c9dee
+Create Date: 2026-08-19 08:11:00.066358
 
 """
-
 from collections.abc import Sequence
 
 # revision identifiers, used by Alembic.
-revision: str = "0fca0b90cac2"
-down_revision: str | Sequence[str] | None = None
+revision: str = '7db18f4872d0'
+down_revision: str | Sequence[str] | None = '2ca3981c9dee'
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 

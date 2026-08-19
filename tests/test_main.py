@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -137,9 +139,24 @@ def test_listar_alertas_sensor() -> None:
 # ==========================================
 
 
+
 def test_eliminar_sensor() -> None:
-    response = client.delete(f"/sensors/{TEST_SENSOR_ID}")
-    assert response.status_code == 204
+    id_unico = f"DEL-{uuid.uuid4().hex[:4]}"
+    
+    # 1. Intentamos crearlo
+    res_post = client.post(
+        "/sensors",
+        json={
+            "id": id_unico,
+            "type": "temperatura",
+            "location": "Laboratorio QA"
+        }
+    )
+    assert res_post.status_code == 201, f"EXPLOTÓ EN EL POST: {res_post.json()}"
+    
+    res_del = client.delete(f"/sensors/{id_unico}")
+    
+    assert res_del.status_code == 204, f"EXPLOTÓ EN EL DELETE: {res_del.json()}"
 
 
 def test_ruta_principal() -> None:

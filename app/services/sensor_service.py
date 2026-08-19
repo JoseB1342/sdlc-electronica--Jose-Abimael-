@@ -14,7 +14,7 @@ class SensorService:
     def __init__(self, repo: SensorRepository) -> None:
         self._repo = repo
 
-    def register_sensor(self, sensor_id: str, sensor_type: str, location: str) -> SensorModel:
+    def register_sensor(self, sensor_id: str, sensor_type: str, location: str, max_threshold: float | None = None):
         # NUEVO: Validar que los textos no estén vacíos
         if not sensor_id.strip() or not sensor_type.strip() or not location.strip():
             raise ValueError("Error: El ID, tipo y ubicación del sensor no pueden estar vacíos.")

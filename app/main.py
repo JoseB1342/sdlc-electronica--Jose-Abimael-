@@ -1,28 +1,18 @@
 from fastapi import FastAPI
 
-from app.db import Base, engine
-from app.routers import reading_router, sensor_router
+from app.routers import alerts, reading_router, sensor_router
 
 app = FastAPI(title="SensorHub API REST", version="1.0.0")
-"Ojo: Aquí comenté el drop_all para proteger PostgreSQL en producción"
-# --- ZONA DE PELIGRO ---
-# Comentado para proteger la base de datos en producción
-# Base.metadata.drop_all(bind=engine)
-# -----------------------
-
-# Crear tablas con el nuevo esquema
-Base.metadata.create_all(bind=engine)
 
 # Conectar los routers
+app.include_router(alerts.router)
 app.include_router(sensor_router.router)
 app.include_router(reading_router.router)
-
 
 @app.get("/")
 def root() -> dict:
     return {"mensaje": "API funcionando correctamente"}
 
-
-@app.get("/health")
-def health_check() -> dict:
-    return {"status": "ok"}
+@app.get("/health", tags=["Monitoreo"])
+def health_check():
+    return {"status": "ok", "message": "API de Alto Potencial funcionando correctamente"}

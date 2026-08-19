@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+from datetime import datetime
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status  # <--- Importar Query
@@ -6,8 +7,9 @@ from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
 from app.models.alert import AlertModel
-from app.repositories.sqlite_repo import SQLiteSensorRepository
+from app.repositories.sqlite_repo import SQLiteReadingRepository, SQLiteSensorRepository
 from app.schemas import SensorCreate, SensorOut
+from app.services.reading_service import ReadingService
 from app.services.sensor_service import SensorService
 
 router = APIRouter(prefix="/sensors", tags=["sensors"])
@@ -30,7 +32,7 @@ def get_sensor_service(db: Session = Depends(get_db)) -> SensorService:
 @router.post("", response_model=SensorOut, status_code=status.HTTP_201_CREATED)
 def create_sensor(sensor: SensorCreate, service: SensorService = Depends(get_sensor_service)) -> Any:
     try:
-        return service.register_sensor(sensor.id, sensor.type, sensor.location)
+        return service.register_sensor(sensor.id, sensor.type, sensor.location, sensor.max_threshold)
     except ValueError as e:
         raise HTTPException(status_code=409, detail=str(e)) from e
 
@@ -69,5 +71,25 @@ def delete_sensor(
 ) -> None:
     try:
         sensor_service.remove_sensor(sensor_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+
+# --- INYECTOR DE DEPENDENCIAS PARA LECTURAS ---
+def get_reading_service(db: Session = Depends(get_db)) -> ReadingService:
+    reading_repo = SQLiteReadingRepository(db)
+    sensor_repo = SQLiteSensorRepository(db)
+    # Inyectamos ambos repositorios al servicio
+    return ReadingService(repo=reading_repo, sensor_repo=sensor_repo)
+
+@router.get("/{sensor_id}/statistics")
+def get_sensor_statistics(
+    sensor_id: str,
+    from_date: datetime | None = Query(None, description="Fecha de inicio (YYYY-MM-DDTHH:MM:SS)"),
+    to_date: datetime | None = Query(None, description="Fecha de fin (YYYY-MM-DDTHH:MM:SS)"),
+    reading_service: ReadingService = Depends(get_reading_service)
+) -> Any:
+    try:
+        stats = reading_service.get_sensor_statistics(sensor_id, from_date, to_date)
+        return stats
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e)) from e

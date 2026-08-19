@@ -13,4 +13,6 @@ class AlertModel(Base):
     sensor_id: Mapped[str] = mapped_column(String, index=True)
     reading_value: Mapped[float] = mapped_column(Float)
     threshold: Mapped[float] = mapped_column(Float)
+    message: Mapped[str] = mapped_column(String) 
+    status: Mapped[str] = mapped_column(String, default="open")  
     timestamp: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

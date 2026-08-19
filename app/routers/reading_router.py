@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.db import SessionLocal
 from app.models.sensor import SensorModel
+from app.repositories.alert import SQLAlchemyAlertRepository
 from app.repositories.sqlite_repo import SQLiteReadingRepository
 from app.schemas import ReadingCreate, SensorReadingOut
 from app.services.alert_strategy import DBAlertStrategy
@@ -23,21 +24,27 @@ def get_db() -> Iterator[Session]:
         db.close()
 
 
-# Creamos un adaptador rápido para que el servicio pueda buscar el sensor
 class BasicSensorRepo:
     def __init__(self, db: Session)-> None:
         self.db = db
 
-    def get(self, sensor_id: str) -> Any:
+    def get_by_id(self, sensor_id: str) -> Any:
         return self.db.query(SensorModel).filter(SensorModel.id == sensor_id).first()
 
 
-# Centralizamos la creación del servicio aquí para no repetirlo
 def get_reading_service(db: Session = Depends(get_db)) -> ReadingService:
     reading_repo = SQLiteReadingRepository(db)
     sensor_repo = BasicSensorRepo(db)
     alert_strategy = DBAlertStrategy(db)
-    return ReadingService(reading_repo, sensor_repo, alert_strategy)
+    
+    alert_repo = SQLAlchemyAlertRepository(db)
+    
+    return ReadingService(
+        repo=reading_repo, 
+        sensor_repo=sensor_repo, 
+        alert_repo=alert_repo,
+        alert_strategy=alert_strategy
+    )
 
 
 # ---------------------------------------------------------

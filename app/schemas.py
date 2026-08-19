@@ -4,13 +4,28 @@ from typing import Self
 from pydantic import BaseModel, ConfigDict, model_validator
 
 
+class AlertResponse(BaseModel):
+    alert_id: str
+    sensor_id: str
+    reading_value: float
+    threshold: float
+    message: str
+    status: str
+    timestamp: datetime
+    
+    model_config = ConfigDict(from_attributes=True)
+
+class AlertStatusUpdate(BaseModel):
+    status: str  # Solo aceptaremos "open", "acknowledged" o "resolved"
+
 class Alert(BaseModel):
     alert_id: str
     sensor_id: str
     reading_value: float
     threshold: float
+    message: str   
+    status: str    
     timestamp: datetime
-
 
 class SensorCreate(BaseModel):
     id: str
@@ -18,11 +33,18 @@ class SensorCreate(BaseModel):
     location: str
     max_threshold: float | None = None
 
-
 class SensorOut(SensorCreate):
     is_active: bool
     model_config = ConfigDict(from_attributes=True)
 
+class SensorReadingOut(BaseModel):
+    id: int
+    sensor_id: str
+    value: float
+    unit: str
+    created_at: datetime  
+
+    model_config = ConfigDict(from_attributes=True)
 
 class ReadingCreate(BaseModel):
     sensor_id: str
@@ -49,12 +71,3 @@ class ReadingCreate(BaseModel):
             raise ValueError(f"Física inválida. Unidad de medida {self.unit} no  reconocida por el sistema")
 
         return self
-
-
-class SensorReadingOut(BaseModel):
-    id: int
-    sensor_id: str
-    value: float
-    unit: str
-    created_at: datetime 
-    model_config = ConfigDict(from_attributes=True)
