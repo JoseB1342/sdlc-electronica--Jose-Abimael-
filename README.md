@@ -74,9 +74,6 @@ API para la gestión y monitoreo de sensores.
 -------------------------------------------------
 ## Arquitectura del Sistema
 
-El siguiente diagrama ilustra la arquitectura de SensorHub, mostrando el flujo de datos desde los clientes y dispositivos físicos hasta la base de datos, así como el pipeline de integración continua.
-
-```mermaid
 graph TD
     subgraph Capa de Dispositivos y Clientes
         C[Cliente REST <br/> Swagger / Navegador]
@@ -98,4 +95,3 @@ graph TD
     Git -->|Push en main| Actions
     Actions -->|Despliegue Automático| API
     API <-->|SQLAlchemy ORM| DB
-    
