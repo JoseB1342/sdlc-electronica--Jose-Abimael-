@@ -1,6 +1,4 @@
-from typing import Any
 from fastapi import FastAPI
-
 
 from app.routers import alerts, reading_router, sensor_router
 

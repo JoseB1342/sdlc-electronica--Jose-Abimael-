@@ -1,5 +1,4 @@
-from typing import Any
-from typing import Protocol
+from typing import Any, Protocol
 
 from app.models.alert import AlertModel
 
