@@ -1,4 +1,11 @@
 import uuid
+from app.db import Base, engine
+
+from app.models.sensor import SensorModel
+from app.models.reading import ReadingModel
+from app.models.alert import AlertModel
+
+Base.metadata.create_all(bind=engine)
 
 from fastapi.testclient import TestClient
 
