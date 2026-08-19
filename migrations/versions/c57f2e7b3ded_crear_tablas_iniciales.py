@@ -1,3 +1,4 @@
+# ruff: noqa: I001
 """crear_tablas_iniciales
 
 Revision ID: c57f2e7b3ded

@@ -1,3 +1,4 @@
+# ruff: noqa: I001
 """add is_active to sensors
 
 Revision ID: 7db18f4872d0

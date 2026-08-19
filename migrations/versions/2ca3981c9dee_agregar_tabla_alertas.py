@@ -1,3 +1,4 @@
+# ruff: noqa: I001
 """agregar_tabla_alertas
 
 Revision ID: 2ca3981c9dee
