@@ -1,6 +1,8 @@
 import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
+
 
 def get_database_url() -> str:
     # Intenta leer la URL de la nube; si no existe (local), usa SQLite como comodín
