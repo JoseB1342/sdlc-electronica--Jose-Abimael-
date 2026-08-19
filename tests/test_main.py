@@ -1,3 +1,4 @@
+# ruff: noqa: F401, I001
 import uuid
 
 from fastapi.testclient import TestClient
