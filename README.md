@@ -74,6 +74,7 @@ API para la gestión y monitoreo de sensores.
 -------------------------------------------------
 ## Arquitectura del Sistema
 
+```mermaid
 graph TD
     subgraph Capa de Dispositivos y Clientes
         C[Cliente REST <br/> Swagger / Navegador]
@@ -95,3 +96,4 @@ graph TD
     Git -->|Push en main| Actions
     Actions -->|Despliegue Automático| API
     API <-->|SQLAlchemy ORM| DB
+```
