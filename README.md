@@ -2,7 +2,7 @@
 
 ---------------------------
 
-##  Stack Tecnológico
+##  Stack Tecnológico 1
 Este proyecto está construido utilizando las siguientes herramientas profesionales:
 
 * **Lenguaje:** Python 3.12+ (con Type Hints avanzados, Dataclasses y Enums)
