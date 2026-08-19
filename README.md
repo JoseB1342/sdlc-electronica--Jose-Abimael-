@@ -71,3 +71,30 @@ API para la gestión y monitoreo de sensores.
 - **Health Check:** [`https://TU_URL_DE_RENDER.onrender.com/health`](https://sensorhub-api-erl4.onrender.com)
 - **Documentación Swagger:** [`https://TU_URL_DE_RENDER.onrender.com/docs`](https://sensorhub-api-erl4.onrender.com)
 .
+-------------------------------------------------
+## Arquitectura del Sistema
+
+El siguiente diagrama ilustra la arquitectura de SensorHub, mostrando el flujo de datos desde los clientes y dispositivos físicos hasta la base de datos, así como el pipeline de integración continua.
+
+```mermaid
+graph TD
+    subgraph Capa de Dispositivos y Clientes
+        C[Cliente REST <br/> Swagger / Navegador]
+        IoT[Hardware IoT <br/> ESP32 / NodeMCU]
+    end
+
+    subgraph CI/CD Pipeline
+        Git[GitHub <br/> Repositorio]
+        Actions[GitHub Actions <br/> Pruebas y Linting]
+    end
+
+    subgraph Render Cloud
+        API[FastAPI Web Service <br/> Uvicorn]
+        DB[(PostgreSQL <br/> Base de Datos)]
+    end
+
+    C -->|HTTP REST| API
+    IoT -.->|MQTT / HTTP POST <br/> Futuro Track A| API
+    Git -->|Push en main| Actions
+    Actions -->|Despliegue Automático| API
+    API <-->|SQLAlchemy ORM| DB
