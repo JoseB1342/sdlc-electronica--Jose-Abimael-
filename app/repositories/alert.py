@@ -1,3 +1,4 @@
+from typing import Any
 from sqlalchemy.orm import Session
 
 from app.models.alert import AlertModel
@@ -7,7 +8,7 @@ class SQLAlchemyAlertRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def add(self, alert_id: str, sensor_id: str, reading_value: float, threshold: float, message: str, status: str):
+    def add(self, alert_id: str, sensor_id: str, reading_value: float, threshold: float, message: str, status: str) -> Any:
         nueva_alerta = AlertModel(
             alert_id=alert_id,
             sensor_id=sensor_id,

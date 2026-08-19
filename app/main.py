@@ -1,4 +1,6 @@
+from typing import Any
 from fastapi import FastAPI
+
 
 from app.routers import alerts, reading_router, sensor_router
 
@@ -14,5 +16,5 @@ def root() -> dict:
     return {"mensaje": "API funcionando correctamente"}
 
 @app.get("/health", tags=["Monitoreo"])
-def health_check():
+def health_check() -> dict:
     return {"status": "ok", "message": "API de Alto Potencial funcionando correctamente"}

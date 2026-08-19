@@ -1,3 +1,4 @@
+from typing import Any
 from datetime import datetime
 
 from sqlalchemy import func, select
@@ -95,7 +96,7 @@ class SQLiteSensorRepository:
             sensor.is_active = False
             self.db.commit()
 
-    def deactivate(self, sensor_id: str):
+    def deactivate(self, sensor_id: str) -> Any:
         sensor = self.get_by_id(sensor_id)
         
         if not sensor:

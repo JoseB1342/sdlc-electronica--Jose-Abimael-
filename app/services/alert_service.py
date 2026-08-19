@@ -1,3 +1,4 @@
+from typing import Any
 from typing import Protocol
 
 from app.models.alert import AlertModel
@@ -12,10 +13,10 @@ class AlertService:
     def __init__(self, repo: AlertRepository):
         self._repo = repo
 
-    def get_active_alerts(self):
+    def get_active_alerts(self) -> Any:
         return self._repo.get_all_active()
 
-    def change_alert_status(self, alert_id: str, new_status: str):
+    def change_alert_status(self, alert_id: str, new_status: str) -> Any:
         # Validación de negocio
         valid_statuses = ["open", "acknowledged", "resolved"]
         if new_status not in valid_statuses:

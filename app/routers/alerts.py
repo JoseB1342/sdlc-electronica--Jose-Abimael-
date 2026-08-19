@@ -1,3 +1,4 @@
+from typing import Any
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.db import SessionLocal
@@ -8,7 +9,7 @@ from app.services.alert_service import AlertService
 router = APIRouter(prefix="/alerts", tags=["Alerts"])
 
 # Inyección de dependencias
-def get_alert_service():
+def get_alert_service() ->Any:
     db = SessionLocal()
     try:
         repo = SQLAlchemyAlertRepository(db)
@@ -17,12 +18,12 @@ def get_alert_service():
         db.close()
 
 @router.get("/active", response_model=list[AlertResponse])
-def get_active_alerts(service: AlertService = Depends(get_alert_service)):
+def get_active_alerts(service: AlertService = Depends(get_alert_service)) -> Any:
     """Consulta todas las alertas que están en estado 'open'"""
     return service.get_active_alerts()
 
 @router.patch("/{alert_id}/status", response_model=AlertResponse)
-def update_alert_status(alert_id: str, update_data: AlertStatusUpdate, service: AlertService = Depends(get_alert_service)):
+def update_alert_status(alert_id: str, update_data: AlertStatusUpdate, service: AlertService = Depends(get_alert_service)) -> Any:
     """Cambia el estado de una alerta (ej. de open a acknowledged o resolved)"""
     try:
         return service.change_alert_status(alert_id, update_data.status)
