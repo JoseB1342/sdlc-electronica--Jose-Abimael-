@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from app.mqtt_client import start_mqtt_client
 
+from app.mqtt_client import start_mqtt_client
 from app.routers import alerts, reading_router, sensor_router
 
 app = FastAPI(title="SensorHub API REST", version="1.0.0")

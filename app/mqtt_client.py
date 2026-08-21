@@ -1,4 +1,5 @@
 import json
+
 import paho.mqtt.client as mqtt
 from paho.mqtt.enums import CallbackAPIVersion
 
