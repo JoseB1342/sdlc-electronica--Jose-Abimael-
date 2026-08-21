@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 import paho.mqtt.client as mqtt
 from paho.mqtt.enums import CallbackAPIVersion
@@ -11,14 +12,14 @@ MQTT_BROKER = "broker.hivemq.com"
 MQTT_PORT = 1883
 MQTT_TOPIC = "joseb/sensorhub/telemetry"
 
-def on_connect(client, userdata, flags, reason_code, properties):
+def on_connect(client: Any, userdata: Any, flags: Any, reason_code: Any, properties: Any = None) -> None:
     if reason_code == 0:
         print(f"✅ Conectado a MQTT Broker Público: {MQTT_BROKER}")
         client.subscribe(MQTT_TOPIC)
     else:
         print(f"❌ Error al conectar a MQTT. Código: {reason_code}")
 
-def on_message(client, userdata, msg):
+def on_message(client: Any, userdata: Any, msg: Any) -> None:
     try:
         payload = json.loads(msg.payload.decode())
         print(f"📩 ¡Mensaje atrapado desde Wokwi!: {payload}")
@@ -42,7 +43,7 @@ def on_message(client, userdata, msg):
     except json.JSONDecodeError:
         print("⚠️ El mensaje recibido no es un JSON válido")
 
-def start_mqtt_client():
+def start_mqtt_client() -> None:
     client = mqtt.Client(callback_api_version=CallbackAPIVersion.VERSION2)
     
     client.on_connect = on_connect

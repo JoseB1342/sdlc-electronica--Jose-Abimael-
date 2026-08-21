@@ -4,8 +4,9 @@ from app.mqtt_client import start_mqtt_client
 from app.routers import alerts, reading_router, sensor_router
 
 app = FastAPI(title="SensorHub API REST", version="1.0.0")
+
 @app.on_event("startup")
-async def startup_event():
+async def startup_event() -> None:
     start_mqtt_client()
     
 # Conectar los routers
