@@ -72,6 +72,13 @@ API para la gestión y monitoreo de sensores.
 - **Documentación Swagger:** [`https://TU_URL_DE_RENDER.onrender.com/docs`](https://sensorhub-api-erl4.onrender.com)
 .
 -------------------------------------------------
+Video de explicacion de API
+https://www.youtube.com/watch?v=AgfInSDfDCY
+-------------------------------------------------
+"Simulador de Hardware IoT: [Enlace de Wokwi]"
+https://wokwi.com/projects/472973628793804801
+
+------------------------------------------------
 ## Arquitectura del Sistema
 
 ```mermaid
